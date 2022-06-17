@@ -10,5 +10,21 @@
 <body>
     <script src="script.js"></script>
     <canvas id="gc"></canvas>
+    <h1 id="debug">placer</h1>
+    <div id="inputSection">
+        <div id="sid">
+            <label for="sides">Sides (3-10):</label>
+            <input type="number" id="sides" name="sides" min="3" max="10">
+        </div>
+        <div id="psh">
+            <label for="pushable">Pushable:</label>
+            <input type="checkbox" id="pushable" name="pushable">
+        </div>
+        <div id="clr">
+            <label for="color">Color:</label>
+            <input type="color" id="color" name="color" value="#A0A0A0">
+        </div>
+        <button type="button" onclick="addPolygon()">Create Polygon</button>
+    </div>
 </body>
 </html>
