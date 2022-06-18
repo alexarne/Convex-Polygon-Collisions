@@ -4,7 +4,7 @@ html, body {
     margin: 0;
     border: 0;
     padding: 0;
-    background-color: white;
+    background-color: #181818;
 }
 
 #gc {
@@ -13,31 +13,72 @@ html, body {
     height: 100%;
 }
 
-#debug {
-    color: antiquewhite;
-    position: absolute;
-    left: 100px;
-}
-
 #inputSection {
     position: absolute;
     left: 50%;
-    bottom: 5%;
+    bottom: 10%;
     transform: translate(-50%, 0);
     text-align: center;
+    width: 400px;
 }
 
-#sid {
+#sides-container {
+    color: aliceblue;
     display: inline;
     padding-right: 30px;
 }
 
-#psh {
+#sides-label {
+
+}
+
+#sides {
+    width: 32px;
+    cursor: 
+}
+
+#pushable-container {
+    color: aliceblue;
     display: inline;
     padding-right: 30px;
 }
 
-#clr {
-    display: inline;
-    padding-right: 30px;
+#pushable-label {
+
 }
+
+#pushable {
+
+}
+
+#color-container {
+    color: aliceblue;
+    display: inline;
+}
+
+#color-label {
+
+}
+
+#color {
+
+}
+
+#submit-container {
+    margin-top: 20px;
+}
+
+#submit {
+    outline: none;
+}
+
+/* Credit: https://stackoverflow.com/a/4407335 */
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+  }
