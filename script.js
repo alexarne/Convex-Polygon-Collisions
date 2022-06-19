@@ -1,4 +1,10 @@
 
+if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame =
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame;
+}
+
 window.onload = function() {
     canv = document.getElementById("gc");
     ctx = canv.getContext("2d");
@@ -156,28 +162,6 @@ function mouseClick(evt) {
     let posX = evt.pageX;
     let posY = evt.pageY;
     
-}
-
-if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame =
-        window.mozRequestAnimationFrame ||
-        window.webkitRequestAnimationFrame;
-}
-var time = [];
-var samples = 5;        // 5 creates a delay of ~0.17s at 30 fps
-function loadValues(now) {
-    time.unshift(now);
-    if (time.length > samples) {
-        time.pop();                                 // Last is undefined
-        let frameTime = time[0] - time[samples-1];  // Milliseconds between two frames
-        let fps = (samples-1)*1000/frameTime;       // 1 / fps = seconds per frame
-        let ratio = 144/fps;
-        rotationSpeed *= ratio;
-        moveSpeed *= ratio;
-        loaded = true;
-    } else {
-        window.requestAnimationFrame(loadValues);
-    }
 }
 
 class Polygon {
