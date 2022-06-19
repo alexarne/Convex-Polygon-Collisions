@@ -68,6 +68,7 @@ function draw(now) {
     rotationSpeed = rotationSpeedDefault*ratio;
     moveSpeed = moveSpeedDefault*ratio;
     if (!isNaN(fps)) loaded = true;    // Flush first 2 cycles, undefined
+    console.log(fps);
 
     window.requestAnimationFrame(draw);
 
@@ -91,10 +92,10 @@ function draw(now) {
     ctx.fillRect(w/2, h/2-400, 340, 270);
     
     if (loaded) {
-        if (right) polys[selected].rot += rotationSpeed;
-        if (left) polys[selected].rot -= rotationSpeed;
-        if (forward) polys[selected].forward();
-        if (backward) polys[selected].backward();
+        if (right) polys[selected].turnRight();
+        if (left) polys[selected].turnLeft();
+        if (forward) polys[selected].moveForwards();
+        if (backward) polys[selected].moveBackwards();
     }
 
     polys.forEach((element, index) => {
@@ -220,12 +221,20 @@ class Polygon {
         return arr;
     }
 
-    forward() {
+    turnRight() {
+        this.rot += rotationSpeed;
+    }
+
+    turnLeft() {
+        this.rot -= rotationSpeed;
+    }
+
+    moveForwards() {
         this.x += moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y -= moveSpeed*Math.sin(Math.PI/2-this.rot);
     }
 
-    backward() {
+    moveBackwards() {
         this.x -= moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y += moveSpeed*Math.sin(Math.PI/2-this.rot);
     }
