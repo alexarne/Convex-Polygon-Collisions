@@ -2,25 +2,29 @@
 window.onload = function() {
     canv = document.getElementById("gc");
     ctx = canv.getContext("2d");
+    
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
-    // setInterval(draw, 1000/60);
+    canv.addEventListener('click', mouseClick, false);
+
+    // Set global variables
+    rotationSpeedDefault = 0.03;
+    moveSpeedDefault = 1.3;
+    loaded = false;
 
     rotation = 0;
     right = false;
     left = false;
     forward = false;
     backward = false;
-    rotationSpeed = 0.03;
-    moveSpeed = 1.3;
     polys = [];
     spawnHeight = 130
-
     h = window.innerHeight;
     w = window.innerWidth;
-    originX = w/2;
-    originY = h*0.9-240 + spawnHeight/2;
-    polys[0] = new Polygon(5, true, "#A0A0A0", w/2, h/2);
+    spawnX = w/2;
+    spawnY = h*0.9-240 + spawnHeight/2;
+
+    polys[0] = new Polygon(5, true, "#A0A0A0");
     selected = 0;
 
     draw();
@@ -36,6 +40,8 @@ var right;
 var left;
 var forward;
 var backward;
+var rotationSpeedDefault;
+var moveSpeedDefault;
 var rotationSpeed;
 var moveSpeed;
 
@@ -43,18 +49,29 @@ var polys;
 var selected;
 var spawnHeight;
 
-var originX;
-var originY;
+var spawnX;
+var spawnY;
+var loaded;
+var prevTime;
 
-function draw() {
+function draw(now) {
+    let frameTime = now - prevTime;
+    prevTime = now;
+    let fps = 1000/frameTime;
+    let ratio = 144/fps;
+    rotationSpeed = rotationSpeedDefault*ratio;
+    moveSpeed = moveSpeedDefault*ratio;
+    if (!isNaN(fps)) loaded = true;    // Flush first 2 cycles, undefined
+
     window.requestAnimationFrame(draw);
+
     // Refresh values
     h = window.innerHeight;
     w = window.innerWidth;
     ctx.canvas.width = w;
     ctx.canvas.height = h;
-    originX = w/2;
-    originY = h*0.9-240 + spawnHeight/2;
+    spawnX = w/2;
+    spawnY = h*0.9-240 + spawnHeight/2;
 
     ctx.fillStyle = "#181818";
     ctx.fillRect(0, 0, w, h);
@@ -62,15 +79,18 @@ function draw() {
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     ctx.globalAlpha = 0.05;
-    ctx.drawImage(document.getElementById("spawn"), 0, 0, 340, 270, w/2-(spawnHeight*340/270)/2, originY - spawnHeight/2, spawnHeight*340/270, spawnHeight);    // image is 340x270
+    ctx.drawImage(document.getElementById("spawn"), 0, 0, 340, 270, w/2-(spawnHeight*340/270)/2, spawnY - spawnHeight/2, spawnHeight*340/270, spawnHeight);    // image is 340x270
     ctx.restore();
 
     ctx.fillRect(w/2, h/2-400, 340, 270);
     
-    if (right) polys[selected].rot += rotationSpeed;
-    if (left) polys[selected].rot -= rotationSpeed;
-    if (forward) polys[selected].forward();
-    if (backward) polys[selected].backward();
+    if (loaded) {
+        if (right) polys[selected].rot += rotationSpeed;
+        if (left) polys[selected].rot -= rotationSpeed;
+        if (forward) polys[selected].forward();
+        if (backward) polys[selected].backward();
+    }
+
     polys.forEach((element, index) => {
         if (index != selected) element.draw(ctx, false);
     });
@@ -83,7 +103,7 @@ function addPolygon() {
     let pushable = document.getElementById("pushable").checked;
     let color = document.getElementById("color").value;
     selected = polys.length;
-    polys[selected] = new Polygon(sides, pushable, color, w/2, h/2);
+    polys[selected] = new Polygon(sides, pushable, color);
 }
 
 function keyDown(evt) {
@@ -132,6 +152,34 @@ function keyUp(evt) {
     }
 }
 
+function mouseClick(evt) {
+    let posX = evt.pageX;
+    let posY = evt.pageY;
+    
+}
+
+if (!window.requestAnimationFrame) {
+    window.requestAnimationFrame =
+        window.mozRequestAnimationFrame ||
+        window.webkitRequestAnimationFrame;
+}
+var time = [];
+var samples = 5;        // 5 creates a delay of ~0.17s at 30 fps
+function loadValues(now) {
+    time.unshift(now);
+    if (time.length > samples) {
+        time.pop();                                 // Last is undefined
+        let frameTime = time[0] - time[samples-1];  // Milliseconds between two frames
+        let fps = (samples-1)*1000/frameTime;       // 1 / fps = seconds per frame
+        let ratio = 144/fps;
+        rotationSpeed *= ratio;
+        moveSpeed *= ratio;
+        loaded = true;
+    } else {
+        window.requestAnimationFrame(loadValues);
+    }
+}
+
 class Polygon {
     x;
     y;
@@ -141,22 +189,21 @@ class Polygon {
     sides;
     pushable;
 
-    constructor(sides, pushable, color, x, y) {
-        this.x = 0;
-        this.y = 0;
+    constructor(sides, pushable, color) {
+        this.x = spawnX;
+        this.y = spawnY;
         this.r = 50;
         this.rot = 0;
         this.c = color;
         this.sides = sides;
         this.pushable = pushable;
-
+        
         // Get polygon height to center properly, inefficient but reusing code
         if (sides % 2 == 1) {
-            const arr1 = this.getPoints();
-            let height = arr1[Math.round(arr1.length/2)][1] - arr1[0][1];
-            this.y = - (this.r-height/2);
+            const arr = this.getPoints();
+            let height = arr[Math.round(arr.length/2)][1] - arr[0][1];
+            this.y += (this.r-height/2);
         }
-
     }
 
     draw(ctx, selected) {
@@ -173,7 +220,7 @@ class Polygon {
         ctx.fill();
 
         if (selected) {
-            ctx.arc(originX+this.x+(this.r+8)*Math.cos(Math.PI/2-this.rot), originY-this.y-(this.r+8)*Math.sin(Math.PI/2-this.rot), 3, 0, 2 * Math.PI);
+            ctx.arc(this.x+(this.r+8)*Math.cos(Math.PI/2-this.rot), this.y-(this.r+8)*Math.sin(Math.PI/2-this.rot), 3, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
@@ -181,22 +228,22 @@ class Polygon {
     getPoints() {
         const arr = [];
         let offset = this.sides % 2 == 0 ? Math.PI/this.sides : 0;
-        arr[0] = [originX+this.x+this.r*Math.cos(Math.PI/2-this.rot+offset), originY-this.y-this.r*Math.sin(Math.PI/2-this.rot+offset)];
+        arr[0] = [this.x+this.r*Math.cos(Math.PI/2-this.rot+offset), this.y-this.r*Math.sin(Math.PI/2-this.rot+offset)];
 
         for (let i = 1; i < this.sides; i++) {
-            arr[i] = [originX+this.x+this.r*Math.cos(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset), originY-this.y-this.r*Math.sin(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset)];
+            arr[i] = [this.x+this.r*Math.cos(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset), this.y-this.r*Math.sin(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset)];
         }
         return arr;
     }
 
     forward() {
         this.x += moveSpeed*Math.cos(Math.PI/2-this.rot);
-        this.y += moveSpeed*Math.sin(Math.PI/2-this.rot);
+        this.y -= moveSpeed*Math.sin(Math.PI/2-this.rot);
     }
 
     backward() {
         this.x -= moveSpeed*Math.cos(Math.PI/2-this.rot);
-        this.y -= moveSpeed*Math.sin(Math.PI/2-this.rot);
+        this.y += moveSpeed*Math.sin(Math.PI/2-this.rot);
     }
 }
 
