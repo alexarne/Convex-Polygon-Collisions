@@ -174,8 +174,8 @@ class Polygon {
     pushable;
 
     constructor(sides, pushable, color) {
-        this.x = spawnX;
-        this.y = spawnY;
+        this.x = 0;
+        this.y = 0;
         this.r = 50;
         this.rot = 0;
         this.c = color;
@@ -204,7 +204,7 @@ class Polygon {
         ctx.fill();
 
         if (selected) {
-            ctx.arc(this.x+(this.r+8)*Math.cos(Math.PI/2-this.rot), this.y-(this.r+8)*Math.sin(Math.PI/2-this.rot), 3, 0, 2 * Math.PI);
+            ctx.arc(spawnX+this.x+(this.r+8)*Math.cos(Math.PI/2-this.rot), spawnY+this.y-(this.r+8)*Math.sin(Math.PI/2-this.rot), 3, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
@@ -212,10 +212,10 @@ class Polygon {
     getPoints() {
         const arr = [];
         let offset = this.sides % 2 == 0 ? Math.PI/this.sides : 0;
-        arr[0] = [this.x+this.r*Math.cos(Math.PI/2-this.rot+offset), this.y-this.r*Math.sin(Math.PI/2-this.rot+offset)];
+        arr[0] = [spawnX+this.x+this.r*Math.cos(Math.PI/2-this.rot+offset), spawnY+this.y-this.r*Math.sin(Math.PI/2-this.rot+offset)];
 
         for (let i = 1; i < this.sides; i++) {
-            arr[i] = [this.x+this.r*Math.cos(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset), this.y-this.r*Math.sin(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset)];
+            arr[i] = [spawnX+this.x+this.r*Math.cos(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset), spawnY+this.y-this.r*Math.sin(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset)];
         }
         return arr;
     }
