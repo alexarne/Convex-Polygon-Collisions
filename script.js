@@ -58,39 +58,23 @@ var spawnHeight;
 var spawnX;
 var spawnY;
 var loaded;
-var prevTime;
 
+/**
+ * Draw a frame of the current state on the canvas and update state. 
+ * @param {Number} now Time since starting the window (ms).
+ */
 function draw(now) {
-    let frameTime = now - prevTime;
-    prevTime = now;
-    let fps = 1000/frameTime;
-    let ratio = 144/fps;
-    rotationSpeed = rotationSpeedDefault*ratio;
-    moveSpeed = moveSpeedDefault*ratio;
-    if (!isNaN(fps)) loaded = true;    // Flush first 2 cycles, undefined
-    console.log(fps);
-
     window.requestAnimationFrame(draw);
 
-    // Refresh values
-    h = window.innerHeight;
-    w = window.innerWidth;
-    ctx.canvas.width = w;
-    ctx.canvas.height = h;
-    spawnX = w/2;
-    spawnY = h*0.9-240 + spawnHeight/2;
+    updateValues(now);
+    updateSize();
 
-    ctx.fillStyle = "#181818";
-    ctx.fillRect(0, 0, w, h);
-
-    ctx.save();
-    ctx.globalCompositeOperation = "lighter";
-    ctx.globalAlpha = 0.05;
-    ctx.drawImage(document.getElementById("spawn"), 0, 0, 340, 270, w/2-(spawnHeight*340/270)/2, spawnY - spawnHeight/2, spawnHeight*340/270, spawnHeight);    // image is 340x270
-    ctx.restore();
-
-    ctx.fillRect(w/2, h/2-400, 340, 270);
+    // // Clear the canvas
+    // ctx.fillStyle = "#181818";
+    // ctx.fillRect(0, 0, w, h);
+    drawSpawn();
     
+    // Update selected polygon depending on user action
     if (loaded) {
         if (right) polys[selected].turnRight();
         if (left) polys[selected].turnLeft();
@@ -98,21 +82,84 @@ function draw(now) {
         if (backward) polys[selected].moveBackwards();
     }
 
+    // Draw all polygons, with selected polygon on top
     polys.forEach((element, index) => {
-        if (index != selected) element.draw(ctx, false);
+        if (index != selected) element.draw(false);
     });
-    polys[selected].draw(ctx, true);
+    polys[selected].draw(true);
 }
 
+var prevTime
+/**
+ * Update the moveSpeed and rotationSpeed variables depending on
+ * time elapsed since last frame in order to base movement off of
+ * time and not frames. Incorrect at times but doesn't seem to
+ * impact the user experience too much.
+ * @param {Number} now Time since starting the window (ms).
+ */
+function updateValues(now) {
+    let frameTime = now - prevTime;
+    prevTime = now;
+    let fps = 1000/frameTime;
+    let ratio = 144/fps;
+    rotationSpeed = rotationSpeedDefault*ratio;
+    moveSpeed = moveSpeedDefault*ratio;
+    if (!isNaN(fps)) loaded = true;    // Flush first 2 cycles, is undefined
+}
+
+/**
+ * Update the canvas' dimensions to reflect window size and set
+ * origin (spawn).
+ */
+function updateSize() {
+    h = window.innerHeight;
+    w = window.innerWidth;
+    ctx.canvas.width = w;
+    ctx.canvas.height = h;
+    spawnX = w/2;
+    spawnY = h*0.9-240 + spawnHeight/2;
+}
+
+/**
+ * Draw the spawn area.
+ */
+function drawSpawn() {
+    ctx.save();
+    ctx.globalCompositeOperation = "lighter";
+    ctx.globalAlpha = 0.05;
+    let imageWidth = document.getElementById("spawn").width;
+    let imageHeight = document.getElementById("spawn").height;
+    ctx.drawImage(document.getElementById("spawn"), 
+        0, 0, imageWidth, imageHeight, 
+        spawnX-(spawnHeight*imageWidth/imageHeight)/2, spawnY-spawnHeight/2, 
+        spawnHeight*340/270, spawnHeight);
+    ctx.restore();
+}
+
+/**
+ * Attempt to add a polygon with the user's inputs. Highlight any 
+ * problems which may prevent the polygon from being created
+ * (input is not allowed or existing polygons blocking it).
+ */
 function addPolygon() {
     let sides = document.getElementById("sides").value;
-    if (sides > 40 || sides < 3) return;
+    if (sides > 40 || sides < 3) {
+        // Show error on sides input field
+
+        return;
+    }
     let pushable = document.getElementById("pushable").checked;
     let color = document.getElementById("color").value;
-    selected = polys.length;
-    polys[selected] = new Polygon(sides, pushable, color);
+    let newPlace = polys.length;
+    polys[newPlace] = new Polygon(sides, pushable, color);
+    // Check if new polygon collides with other polygons and if so, highlight them and delete the created polygon
+    selected = newPlace;
 }
 
+/**
+ * Check what key was pressed down and update current state.
+ * @param {Object} evt The type of event containing keyCode.
+ */
 function keyDown(evt) {
     evt = evt || window.event;
     let charCode = evt.keyCode || evt.which;
@@ -138,6 +185,10 @@ function keyDown(evt) {
     }
 }
 
+/**
+ * Check what key stopped being pressed down and update current state.
+ * @param {Object} evt The type of event containing keyCode.
+ */
 function keyUp(evt) {
     evt = evt || window.event;
     let charCode = evt.keyCode || evt.which;
@@ -159,12 +210,20 @@ function keyUp(evt) {
     }
 }
 
+/**
+ * Change the selected polygon to the polygon which the user clicked
+ * on, if any.
+ * @param {Object} evt The event containing click location.
+ */
 function mouseClick(evt) {
     let posX = evt.pageX;
     let posY = evt.pageY;
     
 }
 
+/**
+ * Class representing a polygon.
+ */
 class Polygon {
     x;
     y;
@@ -191,7 +250,12 @@ class Polygon {
         }
     }
 
-    draw(ctx, selected) {
+    /**
+     * Draw the polygon and make it brighter as well as draw a pointer if the
+     * polygon is currently selected.
+     * @param {Boolean} selected If this polygon is currently selected.
+     */
+    draw(selected) {
         ctx.fillStyle = selected ? LightenColor(this.c, 10) : this.c;
         ctx.beginPath();
         
@@ -204,12 +268,16 @@ class Polygon {
         ctx.closePath();
         ctx.fill();
 
-        if (selected) {
+        if (selected) { // Draw pointer
             ctx.arc(spawnX+this.x+(this.r+8)*Math.cos(Math.PI/2-this.rot), spawnY+this.y-(this.r+8)*Math.sin(Math.PI/2-this.rot), 3, 0, 2 * Math.PI);
             ctx.fill();
         }
     }
 
+    /**
+     * Get the coordinates for every point of the polygon at its current position.
+     * @returns {Array} An array containing all the points (x and y) of the polygon.
+     */
     getPoints() {
         const arr = [];
         let offset = this.sides % 2 == 0 ? Math.PI/this.sides : 0;
@@ -221,32 +289,49 @@ class Polygon {
         return arr;
     }
 
+    /**
+     * Turn the polygon to the right.
+     */
     turnRight() {
         this.rot += rotationSpeed;
     }
 
+    /**
+     * Turn the polygon to the left.
+     */
     turnLeft() {
         this.rot -= rotationSpeed;
     }
 
+    /**
+     * Move the polygon forwards.
+     */
     moveForwards() {
         this.x += moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y -= moveSpeed*Math.sin(Math.PI/2-this.rot);
     }
 
+    /**
+     * Move the polygon backwards.
+     */
     moveBackwards() {
         this.x -= moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y += moveSpeed*Math.sin(Math.PI/2-this.rot);
     }
 }
 
-// Credit: https://gist.github.com/renancouto/4675192
+/**
+ * Lighten or darken the input color given by the percent value.
+ * Credit: https://gist.github.com/renancouto/4675192
+ * @param {String} color Hexadecimal representation of the color.
+ * @param {Number} percent Percentage to change (positive or negative) the brightness by.
+ * @returns {String} New color with the change applied.
+ */
 function LightenColor(color, percent) {
     let num = parseInt(color.replace("#",""), 16);
     let amt = Math.round(2.55 * percent);
     let R = (num >> 16) + amt;
     let B = (num >> 8 & 0x00FF) + amt;
     let G = (num & 0x0000FF) + amt;
-
     return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
 };
