@@ -178,10 +178,6 @@ function keyDown(evt) {
         case "D":
             right = true;
             break;
-        case "L":
-            selected++;
-            selected %= polys.length;
-            break;
     }
 }
 
@@ -216,9 +212,13 @@ function keyUp(evt) {
  * @param {Object} evt The event containing click location.
  */
 function mouseClick(evt) {
-    let posX = evt.pageX;
-    let posY = evt.pageY;
-    
+    let coords = [evt.pageX, evt.pageY];
+    for (let i = 0; i < polys.length; i++) {
+        if (inside(coords, polys[i].getPoints())) {
+            selected = i;
+            break;
+        }
+    }
 }
 
 /**
@@ -320,6 +320,10 @@ class Polygon {
     }
 }
 
+
+
+/* ======================= CONTRIBUTIONS ======================= */
+
 /**
  * Lighten or darken the input color given by the percent value.
  * Credit: https://gist.github.com/renancouto/4675192
@@ -334,4 +338,25 @@ function LightenColor(color, percent) {
     let B = (num >> 8 & 0x00FF) + amt;
     let G = (num & 0x0000FF) + amt;
     return "#" + (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (B<255?B<1?0:B:255)*0x100 + (G<255?G<1?0:G:255)).toString(16).slice(1);
+};
+
+/**
+ * Check if a point is inside a polygon using ray-casting algorithm.
+ * Credit: https://stackoverflow.com/a/29915728
+ * @param {Array} point Array containing x- and y-coordinates for the point.
+ * @param {Array} vs Array containing all points for the polygon.
+ * @returns {Boolean} True if point is inside the polygon, false if not.
+ */
+function inside(point, vs) {
+    var x = point[0], y = point[1];
+    var inside = false;
+    for (var i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+        var xi = vs[i][0], yi = vs[i][1];
+        var xj = vs[j][0], yj = vs[j][1];
+        
+        var intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+    return inside;
 };
