@@ -25,10 +25,8 @@ window.onload = function() {
     backward = false;
     polys = [];
     spawnHeight = 130
-    h = window.innerHeight;
-    w = window.innerWidth;
-    spawnX = w/2;
-    spawnY = h*0.9-240 + spawnHeight/2;
+    
+    updateSize();
 
     polys[0] = new Polygon(5, true, "#A0A0A0");
     selected = 0;
