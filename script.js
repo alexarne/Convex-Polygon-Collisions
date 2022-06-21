@@ -69,18 +69,8 @@ function draw(now) {
     updateValues(now);
     updateSize();
 
-    // // Clear the canvas
-    // ctx.fillStyle = "#181818";
-    // ctx.fillRect(0, 0, w, h);
     drawSpawn();
-    
-    // Update selected polygon depending on user action
-    if (loaded) {
-        if (right) polys[selected].turnRight();
-        if (left) polys[selected].turnLeft();
-        if (forward) polys[selected].moveForwards();
-        if (backward) polys[selected].moveBackwards();
-    }
+    if (loaded) updatePolygon();
 
     // Draw all polygons, with selected polygon on top
     polys.forEach((element, index) => {
@@ -134,6 +124,20 @@ function drawSpawn() {
         spawnX-(spawnHeight*imageWidth/imageHeight)/2, spawnY-spawnHeight/2, 
         spawnHeight*340/270, spawnHeight);
     ctx.restore();
+}
+
+/**
+ * Update the selected polygon with respect to user action.
+ */
+function updatePolygon() {
+    if (!(right && left)) {
+        if (right) polys[selected].turnRight();
+        if (left) polys[selected].turnLeft();
+    }
+    if (!(forward && backward)) {
+        if (forward) polys[selected].moveForwards();
+        if (backward) polys[selected].moveBackwards();
+    }
 }
 
 /**
