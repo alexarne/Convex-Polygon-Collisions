@@ -162,7 +162,7 @@ function addPolygon() {
 
 /**
  * Check what key was pressed down and update current state.
- * @param {Object} evt The type of event containing keyCode.
+ * @param {KeyboardEvent} evt The type of event containing keyCode.
  */
 function keyDown(evt) {
     evt = evt || window.event;
@@ -187,7 +187,7 @@ function keyDown(evt) {
 
 /**
  * Check what key stopped being pressed down and update current state.
- * @param {Object} evt The type of event containing keyCode.
+ * @param {KeyboardEvent} evt The type of event containing keyCode.
  */
 function keyUp(evt) {
     evt = evt || window.event;
@@ -213,7 +213,7 @@ function keyUp(evt) {
 /**
  * Change the selected polygon to the polygon which the user clicked
  * on, if any.
- * @param {Object} evt The event containing click location.
+ * @param {PointerEvent} evt The event containing click location.
  */
 function mouseClick(evt) {
     let coords = [evt.pageX, evt.pageY];
