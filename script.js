@@ -5,6 +5,7 @@
  * Check if two polygons collide with each other by using the Separated
  * Axis Theorem. For each edge of either polygon, project all points onto
  * the normal of that edge and see if the points overlap.
+ * Credit: https://youtu.be/7Ik2vowGcU0
  * @param {Array} p1 Array of coordinates for all points of the first polygon.
  * @param {Array} p2 Array of coordinates for all points of the second polygon.
  * @returns {Boolean} True if they collide, false if they don't.
@@ -45,7 +46,7 @@ function collision_SAT(p1, p2) {
  * Calculate the dot product between two vectors in R2.
  * @param {Array} v1 First vector (in R2, x- and y-values).
  * @param {Array} v2 Second vector (in R2, x- and y-values).
- * @returns {Number} The dot product of the vectors.
+ * @returns {Number} The dot product of the vectors if both are in R2.
  */
 function dot2D(v1, v2) {
     if (v1.length == 2 && v2.length == 2) return v1[0]*v2[0] + v1[1]*v2[1];
