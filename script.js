@@ -1,4 +1,79 @@
 
+/* ======================= MAIN ALGORITHM ======================= */
+
+/**
+ * Check if two polygons collide with each other by using the Separated
+ * Axis Theorem. For each edge of either polygon, project all points onto
+ * the normal of that edge and see if the points overlap.
+ * @param {Array} p1 Array of coordinates for all points of the first polygon.
+ * @param {Array} p2 Array of coordinates for all points of the second polygon.
+ * @returns {Boolean} True if they collide, false if they don't.
+ */
+function collision_SAT(p1, p2) {
+    let poly1 = p1;
+    let poly2 = p2;
+
+    // Test all sides of p1, then all sides of p2
+    for (let shape = 0; shape < 2; shape++) {
+        if (shape == 1) {
+            poly1 = p2;
+            poly2 = p1;
+        }
+        for (let a = 0; a < poly1.length; a++) {    // For all edges, see if they overlap along that axis
+            let b = (a+1) % poly1.length;
+            let axisProj = [                        // Normal vector to the edge from point a to point b
+                -(poly1[b][1] - poly1[a][1]),       // Negation of y-difference
+                poly1[b][0] - poly1[a][0]           // x-difference
+            ];
+
+            // Project all points of the first polygon to the projection axis, save min and max (boundaries)
+            let minmax1 = boundaries(poly1, axisProj);
+            let min1 = minmax1[0];
+            let max1 = minmax1[1];
+            let minmax2 = boundaries(poly2, axisProj);
+            let min2 = minmax2[0];
+            let max2 = minmax2[1];
+
+            // If overlap, continue, otherwise, they are separated
+            if (max2 < min1 || max1 < min2) return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Calculate the dot product between two vectors in R2.
+ * @param {Array} v1 First vector (in R2, x- and y-values).
+ * @param {Array} v2 Second vector (in R2, x- and y-values).
+ * @returns {Number} The dot product of the vectors.
+ */
+function dot2D(v1, v2) {
+    if (v1.length == 2 && v2.length == 2) return v1[0]*v2[0] + v1[1]*v2[1];
+}
+
+/**
+ * Compute the minimum and maximum values of all points of a polygon projected 
+ * onto a specific axis.
+ * @param {Array} poly Array of coordinates for all the points of a polygon.
+ * @param {Array} axis The projection axis, vector in R2.
+ * @returns {Array} The minimum value as first element and maximum value as second element.
+ */
+function boundaries(poly, axis) {
+    let q = dot2D(poly[0], axis);
+    let min = q;
+    let max = q;
+    for (let p = 1; p < poly.length; p++) {
+        let q = dot2D(poly[p], axis);
+        min = Math.min(min, q);
+        max = Math.max(max, q);
+    }
+    return [min, max];
+}
+
+
+
+/* ======================= SUPPORTING CODE ======================= */
+
 if (!window.requestAnimationFrame) {
     window.requestAnimationFrame =
         window.mozRequestAnimationFrame ||
@@ -11,7 +86,7 @@ window.onload = function() {
     
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
-    canv.addEventListener('click', mouseClick, false);
+    canv.addEventListener('click', mouseClick);
 
     // Set global variables
     rotationSpeedDefault = 0.03;
@@ -25,7 +100,7 @@ window.onload = function() {
     backward = false;
     polys = [];
     spawnHeight = 130
-    
+
     updateSize();
 
     polys[0] = new Polygon(5, true, "#A0A0A0");
@@ -75,6 +150,13 @@ function draw(now) {
         if (index != selected) element.draw(false);
     });
     polys[selected].draw(true);
+
+    ctx.fillStyle = "red";
+    for (let i = 0; i < polys.length; i++) {
+        for (let j = i+1; j < polys.length; j++) {
+            if (collision_SAT(polys[i].getPoints(), polys[j].getPoints())) ctx.fillRect(100, 100, 10, 200);
+        }
+    }
 }
 
 var prevTime
