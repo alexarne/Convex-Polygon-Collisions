@@ -137,9 +137,21 @@ function resolve_collision(p1, p2) {
 
 
 function resolve_collisions() {
-    for (let i = 0; i < polys.length; i++) {
-        for (let j = i+1; j < polys.length; j++) {
-            resolve_collision(polys[i], polys[j]);
+    if (polys.length == 1) return;
+    let checked = new Array(polys.length).fill(false);
+    while (checked.includes(false)) {
+        for (let i = 0; i < polys.length; i++) {
+            if (checked[i]) continue;
+            let flag = false;
+            for (let j = 0; j < polys.length; j++) {
+                if (i != j && !checked[j]) {
+                    if (resolve_collision(polys[i], polys[j])) {
+                        flag = true;
+                    }
+                }
+            }
+            if (flag) checked.fill(false);
+            checked[i] = true;
         }
     }
 }
