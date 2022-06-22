@@ -1,5 +1,5 @@
 
-/* ======================= MAIN ALGORITHM ======================= */
+/* ======================= MAIN ALGORITHMS ======================= */
 
 /**
  * Check if two polygons collide with each other by using the Separated
@@ -11,14 +11,16 @@
  * @returns {Boolean} True if they collide, false if they don't.
  */
 function collision_SAT(p1, p2) {
-    let poly1 = p1;
-    let poly2 = p2;
+    let poly1 = p1.getPoints();
+    let poly2 = p2.getPoints();
+    let overlap;
 
     // Test all sides of p1, then all sides of p2
     for (let shape = 0; shape < 2; shape++) {
         if (shape == 1) {
-            poly1 = p2;
-            poly2 = p1;
+            let tmp = poly1;
+            poly1 = poly2;
+            poly2 = tmp;
         }
         for (let a = 0; a < poly1.length; a++) {    // For all edges, see if they overlap along that axis
             let b = (a+1) % poly1.length;
@@ -35,21 +37,26 @@ function collision_SAT(p1, p2) {
             let min2 = minmax2[0];
             let max2 = minmax2[1];
 
+            let currentOverlap = Math.min(max1, max2) - Math.max(min1, min2);
+            if (isNaN(overlap)) {
+                overlap = currentOverlap;
+            } else {
+                overlap = Math.min(currentOverlap, overlap);
+            }
+
             // If overlap, continue, otherwise, they are separated
             if (max2 < min1 || max1 < min2) return false;
         }
     }
+    console.log(overlap);
+    console.log(p1.x + " " + p1.y);
+    let d = [p2.x-p1.x, p2.y-p1.y];
+    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]);
+    p1.x -= overlap * d[0] / s;
+    p1.y -= overlap * d[1] / s;
+    console.log((overlap * d[0] / s) + " " + (overlap * d[1] / s));
+    console.log(p1.x + " " + p1.y);
     return true;
-}
-
-/**
- * Calculate the dot product between two vectors in R2.
- * @param {Array} v1 First vector (in R2, x- and y-values).
- * @param {Array} v2 Second vector (in R2, x- and y-values).
- * @returns {Number} The dot product of the vectors if both are in R2.
- */
-function dot2D(v1, v2) {
-    if (v1.length == 2 && v2.length == 2) return v1[0]*v2[0] + v1[1]*v2[1];
 }
 
 /**
@@ -69,6 +76,72 @@ function boundaries(poly, axis) {
         max = Math.max(max, q);
     }
     return [min, max];
+}
+
+/**
+ * Calculate the dot product between two vectors in R2.
+ * @param {Array} v1 First vector (in R2, x- and y-values).
+ * @param {Array} v2 Second vector (in R2, x- and y-values).
+ * @returns {Number} The dot product of the vectors if both are in R2.
+ */
+function dot2D(v1, v2) {
+    if (v1.length == 2 && v2.length == 2) return v1[0]*v2[0] + v1[1]*v2[1];
+}
+
+/**
+ * 
+ * @param {Polygon} p1 The currently selected polygon.
+ * @param {Polygon} p2 The polygon to check and resolve collisions with.
+ */
+function resolve_collision(p1, p2) {
+    let flag = false;
+    let points1 = p1.getPoints();
+    let points2 = p2.getPoints();
+    let poly1 = p1;
+
+    // Test all sides of p1, then all sides of p2
+    for (let shape = 0; shape < 2; shape++) {
+        if (shape == 1) {
+            poly1 = p2;
+            let tmp = points1;
+            points1 = points2;
+            points2 = tmp;
+        }
+        
+        // Check diagonals of polygon...
+        for (let p = 0; p < points1.length; p++) {
+            let line_r1s = [spawnX + poly1.x, spawnY + poly1.y];
+            let line_r1e = points1[p];
+            let displacement = [0, 0];
+            // ...against edges of the other
+            for (let q = 0; q < points2.length; q++) {
+                let line_r2e = points2[q];
+                let line_r2s = points2[(q+1) % points2.length];
+                // Line segment intersection
+                let h = (line_r2e[0]-line_r2s[0])*(line_r1s[1]-line_r1e[1]) - (line_r1s[0]-line_r1e[0])*(line_r2e[1]-line_r2s[1]);
+                let t1 = ((line_r2s[1]-line_r2e[1])*(line_r1s[0]-line_r2s[0]) + (line_r2e[0]-line_r2s[0])*(line_r1s[1]-line_r2s[1])) / h;
+                let t2 = ((line_r1s[1]-line_r1e[1])*(line_r1s[0]-line_r2s[0]) + (line_r1e[0]-line_r1s[0])*(line_r1s[1]-line_r2s[1])) / h;
+                if (t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) { // Line segments crossing
+                    displacement[0] += (1-t1) * (line_r1e[0]-line_r1s[0]);
+                    displacement[1] += (1-t1) * (line_r1e[1]-line_r1s[1]);
+                    flag = true;
+                }
+            }
+            p1.x += displacement[0] * (shape == 0 ? -1 : +1);
+            p1.y += displacement[1] * (shape == 0 ? -1 : +1);
+        }
+    }
+    return flag;
+}
+
+
+
+function resolve_collisions() {
+    for (let i = 0; i < polys.length; i++) {
+        for (let j = i+1; j < polys.length; j++) {
+            resolve_collision(polys[i], polys[j]);
+        }
+    }
 }
 
 
@@ -152,12 +225,7 @@ function draw(now) {
     });
     polys[selected].draw(true);
 
-    ctx.fillStyle = "red";
-    for (let i = 0; i < polys.length; i++) {
-        for (let j = i+1; j < polys.length; j++) {
-            if (collision_SAT(polys[i].getPoints(), polys[j].getPoints())) ctx.fillRect(100, 100, 10, 200);
-        }
-    }
+    resolve_collisions();
 }
 
 var prevTime
