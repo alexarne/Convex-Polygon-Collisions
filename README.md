@@ -1,6 +1,6 @@
 # Convex Polygon Collisions
 
-Simple web-based demonstration of the Separating Axis Theorem and an alternative algorithm named "Diagonals" for checking if two convex polygons have collided as well as a resolution, as inspired by [javidx9](https://youtu.be/7Ik2vowGcU0). The algorithms are only concerned with convex polygons, which are polygons where all interior angles are less than or equal to 180&deg;. For simplicity, the polygons in this demonstration are limited to regular polygons with a configurable amount of sides (3-40), although the polygons do not have to be regular. 
+Simple web-based demonstration of the Separating Axis Theorem and an alternative algorithm named "Diagonals" for checking if two convex polygons have collided as well as a resolution, inspired by [javidx9](https://youtu.be/7Ik2vowGcU0). The algorithms are only concerned with convex polygons, which are polygons where all interior angles are less than or equal to 180&deg;. For simplicity, the polygons in this demonstration are limited to regular polygons with a configurable amount of sides (3-40), although the polygons do not have to be regular. 
 
 ## Demonstration
 
