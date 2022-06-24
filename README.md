@@ -1,6 +1,6 @@
 # Convex Polygon Collisions
 
-Simple web-based demonstration of the Separating Axis Theorem and an alternative algorithm named "Diagonals" for checking if two convex polygons have collided as well as a resolution, inspired by [javidx9](https://youtu.be/7Ik2vowGcU0). The algorithms are only concerned with convex polygons, which are polygons where all interior angles are less than or equal to 180&deg;. For simplicity, the polygons in this demonstration are limited to regular polygons with a configurable amount of sides (3-40), although the polygons do not have to be regular. 
+Simple web-based demonstration of the Separating Axis Theorem and an alternative algorithm named "Diagonals" for checking if two convex polygons have collided as well as a resolution, inspired by [javidx9](https://youtu.be/7Ik2vowGcU0). The resolution for either algorithm may be a bit unnatural in their own way. The algorithms are only concerned with convex polygons, which are polygons where all interior angles are less than or equal to 180&deg;. For simplicity, the polygons in this demonstration are limited to regular polygons with a configurable amount of sides (3-40), although the polygons do not **have** to be regular for the algorithms to work. 
 
 ## Demonstration
 
@@ -8,7 +8,7 @@ link, todo
 
 ## Instructions
 
-The following information can be accessed by clicking on the "Help" button in the top-right corner:
+The following information can also be accessed by clicking on the "Help" button in the top-right corner:
 
 * The user can choose which algorithm to use by clicking on the alternatives in the top-left corner:
 
@@ -18,7 +18,7 @@ The following information can be accessed by clicking on the "Help" button in th
 
 * The user can control the selected polygon by pressing buttons W, A, S, and D for moving forwards, rotating to its left, moving backwards, and rotating to its right, respectively
 
-* The user can spawn new polygons by choosing the amount of sides, whether it can be pushed by other polygons, and its color
+* The user can spawn new polygons by specifying the amount of sides, whether it can be pushed by other polygons, and its color
 
 * The user can select another polygon by clicking on it
 
