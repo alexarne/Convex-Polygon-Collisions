@@ -47,4 +47,4 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * **Diagonals**
 
-    todo
+    If any edge of one polygon intersects with any line from another polygon's center to one of its vertices, the two polygons overlap. This is because in order to overlap, part of one polygon must exist within the other, which is only possible if a vertex exists within it. Furthermore, the resolution for the algorithm then becomes the distance from the intersection to the point which overlaps the other polygon, which simplifies the process of obtaining a resolution.
