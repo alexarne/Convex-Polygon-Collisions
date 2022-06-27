@@ -34,7 +34,8 @@ html, body {
 
 #sides {
     width: 32px;
-    cursor: 
+    cursor: pointer;
+    outline: none;
 }
 
 #pushable-container {
@@ -72,12 +73,17 @@ html, body {
     outline: none;
 }
 
-#help {
+#buttons {
     position: absolute;
-    width: 30px;
-    height: 30px;
     right: 10px;
     top: 10px;
+    display: grid;
+    gap: 5px;
+}
+
+#buttons > * {
+    width: 30px;
+    height: 30px;
 }
 
 /* Credit: https://stackoverflow.com/a/4407335 */
