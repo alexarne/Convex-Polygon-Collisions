@@ -48,14 +48,14 @@ function collision_SAT(p1, p2) {
             if (max2 < min1 || max1 < min2) return false;
         }
     }
-    console.log(overlap);
-    console.log(p1.x + " " + p1.y);
+    // console.log(overlap);
+    // console.log(p1.x + " " + p1.y);
     let d = [p2.x-p1.x, p2.y-p1.y];
-    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]);
+    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]) * 50;    // what ¯\_(ツ)_/¯
     p1.x -= overlap * d[0] / s;
     p1.y -= overlap * d[1] / s;
-    console.log((overlap * d[0] / s) + " " + (overlap * d[1] / s));
-    console.log(p1.x + " " + p1.y);
+    // console.log((overlap * d[0] / s) + " " + (overlap * d[1] / s));
+    // console.log(p1.x + " " + p1.y);
     return true;
 }
 
@@ -93,7 +93,7 @@ function dot2D(v1, v2) {
  * @param {Polygon} p1 The currently selected polygon.
  * @param {Polygon} p2 The polygon to check and resolve collisions with.
  */
-function resolve_collision(p1, p2) {
+function collision_DIAG(p1, p2) {
     let flag = false;
     let points1 = p1.getPoints();
     let points2 = p2.getPoints();
@@ -134,27 +134,33 @@ function resolve_collision(p1, p2) {
     return flag;
 }
 
-
-
 function resolve_collisions() {
-    if (polys.length == 1) return;
-    let checked = new Array(polys.length).fill(false);
-    while (checked.includes(false)) {
-        for (let i = 0; i < polys.length; i++) {
-            if (checked[i]) continue;
-            let flag = false;
-            for (let j = 0; j < polys.length; j++) {
-                if (i != j && !checked[j]) {
-                    if (resolve_collision(polys[i], polys[j])) {
-                        flag = true;
-                    }
-                }
-            }
-            if (flag) checked.fill(false);
-            checked[i] = true;
+    for (let i = 0; i < polys.length; i++) {
+        for (let j = i+1; j < polys.length; j++) {
+            collision_SAT(polys[i], polys[j]);
         }
     }
 }
+
+// function resolve_collisions() {
+//     if (polys.length == 1) return;
+//     let checked = new Array(polys.length).fill(false);
+//     while (checked.includes(false)) {
+//         for (let i = 0; i < polys.length; i++) {
+//             if (checked[i]) continue;
+//             let flag = false;
+//             for (let j = 0; j < polys.length; j++) {
+//                 if (i != j && !checked[j]) {
+//                     if (resolve_collision(polys[i], polys[j])) {
+//                         flag = true;
+//                     }
+//                 }
+//             }
+//             if (flag) checked.fill(false);
+//             checked[i] = true;
+//         }
+//     }
+// }
 
 
 
