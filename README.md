@@ -4,7 +4,7 @@ Simple web-based demonstration of the Separating Axis Theorem and an alternative
 
 ## Demonstration
 
-link, todo
+https://alexarne.github.io/Convex-Polygon-Collisions/
 
 ## Instructions
 
@@ -28,7 +28,7 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * Add functionality to the help-button (top-right) in the form of creating a modal with instructions
 
-* Finalize README by linking to website and code section of algorithm
+* Finalize README by linking to code section of algorithm
 
 ## Algorithm Implementations
 
