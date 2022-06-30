@@ -178,6 +178,8 @@ window.onload = function() {
     
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
+    document.getElementById("sides-next").addEventListener("click", incrSides);
+    document.getElementById("sides-prev").addEventListener("click", decrSides);
     canv.addEventListener('click', mouseClick);
 
     // Set global variables
@@ -313,7 +315,7 @@ function updatePolygon() {
  * (input is not allowed or existing polygons blocking it).
  */
 function addPolygon() {
-    let sides = document.getElementById("sides").value;
+    let sides = parseInt(document.getElementById("sides-value").innerHTML);
     if (sides > 40 || sides < 3) {
         // Show error on sides input field
 
@@ -389,6 +391,28 @@ function mouseClick(evt) {
             selected = i;
             break;
         }
+    }
+}
+
+var max = 40;
+var min = 3;
+
+
+function incrSides() {
+    let value = parseInt(document.getElementById("sides-value").innerHTML);
+    if (value < max) {
+        document.getElementById("sides-value").innerHTML = value + 1
+    } else {
+        document.getElementById("sides-value").innerHTML = min;
+    }
+}
+
+function decrSides() {
+    let value = parseInt(document.getElementById("sides-value").innerHTML)
+    if (value > min) {
+        document.getElementById("sides-value").innerHTML = value - 1
+    } else {
+        document.getElementById("sides-value").innerHTML = max;
     }
 }
 
