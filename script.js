@@ -276,7 +276,7 @@ function updateSize() {
     ctx.canvas.width = w;
     ctx.canvas.height = h;
     spawnX = w/2;
-    spawnY = h*0.9-240 + spawnHeight/2;
+    spawnY = h*0.8-240 + spawnHeight/2;
 }
 
 /**

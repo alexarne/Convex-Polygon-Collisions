@@ -13,21 +13,27 @@
     <canvas id="gc"></canvas>
     <img style="display:none" id="spawn" src="assets/spawn.png">
     <div id="inputSection" class="noselect">
-        <div id="sides-container">
-            <label id="sides-label" for="sides">Sides (3-40):</label>
-            <div id="sides-input">
-                <span id="sides-next"></span>
-                <span id="sides-prev"></span>
-                <div id="sides-value">3</div>
+        <div id="gridLayout">
+            <div id="sides-container">
+                <label id="sides-label" for="sides">Sides</label>
+                <div id="sides-input">
+                    <span id="sides-next"></span>
+                    <span id="sides-prev"></span>
+                    <div id="sides-value">3</div>
+                </div>
             </div>
-        </div>
-        <div id="pushable-container">
-            <label id="pushable-label" for="pushable">Pushable:</label>
-            <input type="checkbox" id="pushable" name="pushable">
-        </div>
-        <div id="color-container">
-            <label id="color-label" for="color">Color:</label>
-            <input type="color" id="color" name="color" value="#A0A0A0">
+            <div id="pushable-container">
+                <label id="pushable-label" for="pushable">Pushable</label>
+                <div id="pushable-div">
+                    <input type="checkbox" id="pushable" name="pushable">
+                </div>
+            </div>
+            <div id="color-container">
+                <label id="color-label" for="color">Color</label>
+                <div id="color-div">
+                    <input type="color" id="color" name="color" value="#A0A0A0">
+                </div>
+            </div>
         </div>
         <div id="submit-container">
             <button id="submit" type="button" onclick="addPolygon()">Create Polygon</button>
