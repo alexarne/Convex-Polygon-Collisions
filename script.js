@@ -6,13 +6,13 @@
  * Axis Theorem. For each edge of either polygon, project all points onto
  * the normal of that edge and see if the points overlap.
  * Credit: https://youtu.be/7Ik2vowGcU0
- * @param {Array} p1 Array of coordinates for all points of the first polygon.
- * @param {Array} p2 Array of coordinates for all points of the second polygon.
- * @returns {Boolean} True if they collide, false if they don't.
+ * @param {Polygon} p1 The polygon to check from.
+ * @param {Polygon} p2 The polygon to displace if there is a collision.
+ * @returns {Boolean} True if the two polygons previously collided.
  */
 function collision_SAT(p1, p2) {
-    let poly1 = p1.getPoints();
-    let poly2 = p2.getPoints();
+    let poly1 = p2.getPoints();
+    let poly2 = p1.getPoints();
     let overlap;
 
     // Test all sides of p1, then all sides of p2
@@ -22,6 +22,7 @@ function collision_SAT(p1, p2) {
             poly1 = poly2;
             poly2 = tmp;
         }
+
         for (let a = 0; a < poly1.length; a++) {    // For all edges, see if they overlap along that axis
             let b = (a+1) % poly1.length;
             let axisProj = [                        // Normal vector to the edge from point a to point b
@@ -48,12 +49,10 @@ function collision_SAT(p1, p2) {
             if (max2 < min1 || max1 < min2) return false;
         }
     }
-    // console.log(overlap);
-    // console.log(p1.x + " " + p1.y);
-    let d = [p2.x-p1.x, p2.y-p1.y];
+    let d = [p1.x-p2.x, p1.y-p2.y];
     let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]) * 50;    // what ¯\_(ツ)_/¯
-    p1.x -= overlap * d[0] / s;
-    p1.y -= overlap * d[1] / s;
+    p2.x -= overlap * d[0] / s;
+    p2.y -= overlap * d[1] / s;
     // console.log((overlap * d[0] / s) + " " + (overlap * d[1] / s));
     // console.log(p1.x + " " + p1.y);
     return true;
@@ -89,20 +88,23 @@ function dot2D(v1, v2) {
 }
 
 /**
- * 
- * @param {Polygon} p1 The currently selected polygon.
- * @param {Polygon} p2 The polygon to check and resolve collisions with.
+ * Check for collision between two polygons by seeing if the line from its
+ * center to one if its vertices intersects with an edge of the other polygon.
+ * Credit: https://youtu.be/7Ik2vowGcU0
+ * @param {Polygon} p1 The polygon to check from.
+ * @param {Polygon} p2 The polygon to displace if there is a collision.
+ * @returns {Boolean} True if the two polygons previously collided.
  */
 function collision_DIAG(p1, p2) {
-    let flag = false;
-    let points1 = p1.getPoints();
-    let points2 = p2.getPoints();
-    let poly1 = p1;
+    let collided = false;
+    let points1 = p2.getPoints();
+    let points2 = p1.getPoints();
+    let poly1 = p2;
 
     // Test all sides of p1, then all sides of p2
     for (let shape = 0; shape < 2; shape++) {
         if (shape == 1) {
-            poly1 = p2;
+            poly1 = p1;
             let tmp = points1;
             points1 = points2;
             points2 = tmp;
@@ -124,45 +126,54 @@ function collision_DIAG(p1, p2) {
                 if (t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) { // Line segments crossing
                     displacement[0] += (1-t1) * (line_r1e[0]-line_r1s[0]);
                     displacement[1] += (1-t1) * (line_r1e[1]-line_r1s[1]);
-                    flag = true;
+                    collided = true;
                 }
             }
-            p1.x += displacement[0] * (shape == 0 ? -1 : +1);
-            p1.y += displacement[1] * (shape == 0 ? -1 : +1);
+            // Use margin to account for rounding errors
+            p2.y += displacement[1] * (shape == 0 ? -1 : +1) * 1.000001;
+            p2.x += displacement[0] * (shape == 0 ? -1 : +1) * 1.000001;
         }
     }
-    return flag;
+    return collided;
 }
 
-function resolve_collisions() {
+/* ======================= ALGORITHM SELECTOR ======================= */
+
+/**
+ * Resolves the collision serially, check for new collisions if another is displaced.
+ * @param {Number} poly Index of the polygon to check from.
+ */
+function resolve_collisions(poly) {
     for (let i = 0; i < polys.length; i++) {
-        for (let j = i+1; j < polys.length; j++) {
-            collision_SAT(polys[i], polys[j]);
+        if (i == poly) continue;
+        if (collision(poly, i)) {
+            resolve_collisions(i);
         }
     }
 }
 
-// function resolve_collisions() {
-//     if (polys.length == 1) return;
-//     let checked = new Array(polys.length).fill(false);
-//     while (checked.includes(false)) {
-//         for (let i = 0; i < polys.length; i++) {
-//             if (checked[i]) continue;
-//             let flag = false;
-//             for (let j = 0; j < polys.length; j++) {
-//                 if (i != j && !checked[j]) {
-//                     if (resolve_collision(polys[i], polys[j])) {
-//                         flag = true;
-//                     }
-//                 }
-//             }
-//             if (flag) checked.fill(false);
-//             checked[i] = true;
-//         }
-//     }
-// }
+var algo;
+/**
+ * Use the selected algorithm to resolve a collision.
+ * @param {Number} poly Index of the first polygon.
+ * @param {Number} i Index of the second polygon.
+ * @returns {Boolean} True if the polygons previously collided.
+ */
+function collision(poly, i) {
+    algo = 1;
+    let p1 = polys[poly];
+    let p2 = polys[i];
 
+    // Use bounding circles to determine if they are too far apart
+    if (Math.sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)) > p1.r + p2.r) return false;
 
+    switch (algo) {
+        case 0:
+            return collision_SAT(p1, p2);
+        case 1:
+            return collision_DIAG(p1, p2);
+    }
+}
 
 /* ======================= SUPPORTING CODE ======================= */
 
@@ -239,13 +250,13 @@ function draw(now) {
     drawSpawn();
     if (loaded) updatePolygon();
 
+    resolve_collisions(selected);
+
     // Draw all polygons, with selected polygon on top
     polys.forEach((element, index) => {
         if (index != selected) element.draw(false);
     });
     polys[selected].draw(true);
-
-    resolve_collisions();
 }
 
 var prevTime
