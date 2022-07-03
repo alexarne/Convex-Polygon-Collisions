@@ -26,7 +26,9 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * Style the input section (bottom center)
 
-* Add functionality to the help-button (top-right) in the form of creating a modal with instructions
+* Add functionality to the help-button (top-right) in the form of creating a modal (pop-up) with instructions
+
+* Add functionality to the settings-button (top-right) in the form of creating a modal (pop-up) with configurable settings (movement speed slider, algorithm selector) and a save button
 
 * Finalize README by linking to code section of algorithm
 
@@ -52,4 +54,15 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * **Chain Collisions**
 
-    One polygon may be pushed into another, causing a chain reaction. The solution is then that we have to redo our collision checks if a polygon was moved, which can be simplified to checking only if the moved polygon collides with any polygons. The initial implementation resulted in occasional stack overflows due to checking polygons back and forth. This is believed to have been caused by floating point imprecision where, although a collision was resolved, it may be found that it still overlaps the other polygon in another iteration. Therefore, we displace the polygon by a little more than what has been calculated. 
+    One polygon may be pushed into another, causing a chain reaction. The solution is then that we have to redo our collision checks if a polygon was moved, which can be simplified to checking only if the moved polygon collides with any polygons. The initial implementation resulted in occasional stack overflows due to checking polygons back and forth infinitely many times. This is believed to have been caused by floating point imprecisions where, although a collision was resolved, it may be found that it still overlaps the other polygon in another iteration. Therefore, we displace the polygon by a little more than what has been calculated. Of course, this is not a scientific solution and stack overflows may still occur, but that has not happened during my own testing.
+
+* **Text**
+
+    Text
+
+## Known Bugs
+
+* If a polygon is pushed by another polygon into two non-pushable polygons, a stack overflow will occur and the polygon will be placed incorrectly. This is caused by the inability for the collision resolution to "collaborate" between two polygons and, as a result, the polygon is only displaced so that it no longer collides with the first polygon, which will happen back and forth.
+
+## Final Words
+

@@ -29,6 +29,9 @@ function collision_SAT(p1, p2) {
                 -(poly1[b][1] - poly1[a][1]),       // Negation of y-difference
                 poly1[b][0] - poly1[a][0]           // x-difference
             ];
+            let d = Math.sqrt(axisProj[0]*axisProj[0]+axisProj[1]*axisProj[1]);
+            axisProj[0] /= d;
+            axisProj[1] /= d;
 
             // Project all points of the first polygon to the projection axis, save min and max (boundaries)
             let minmax1 = boundaries(poly1, axisProj);
@@ -40,7 +43,7 @@ function collision_SAT(p1, p2) {
 
             // If overlap, continue, otherwise, they are separated
             if (max2 < min1 || max1 < min2) return false;
-
+            
             let currentOverlap = Math.min(max1, max2) - Math.max(min1, min2);
             if (isNaN(overlap)) {
                 overlap = currentOverlap;
@@ -50,13 +53,15 @@ function collision_SAT(p1, p2) {
         }
     }
     let d = [p1.x-p2.x, p1.y-p2.y];
-    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]) * 40;    // what ¯\_(ツ)_/¯
+    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]);
+    // Use margin to account for rounding errors
+    let margin = 1.5;
     if (p2.pushable) {
-        p2.x -= overlap * d[0] / s;
-        p2.y -= overlap * d[1] / s;
+        p2.x -= overlap * d[0] / s * margin;
+        p2.y -= overlap * d[1] / s * margin;
     } else {
-        p1.x += overlap * d[0] / s;
-        p1.y += overlap * d[1] / s;
+        p1.x += overlap * d[0] / s * margin;
+        p1.y += overlap * d[1] / s * margin;
     }
     return true;
 }
@@ -133,12 +138,13 @@ function collision_DIAG(p1, p2) {
                 }
             }
             // Use margin to account for rounding errors
+            let margin = 1.000001;
             if (p2.pushable) {
-                p2.y += displacement[1] * (shape == 0 ? -1 : +1) * 1.000001;
-                p2.x += displacement[0] * (shape == 0 ? -1 : +1) * 1.000001;
+                p2.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
+                p2.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
             } else {
-                p1.y += displacement[1] * (shape == 0 ? +1 : -1) * 1.000001;
-                p1.x += displacement[0] * (shape == 0 ? +1 : -1) * 1.000001;
+                p1.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
+                p1.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
             }
         }
     }
@@ -152,6 +158,10 @@ function collision_DIAG(p1, p2) {
  * @param {Number} poly Index of the polygon to check from.
  */
 function resolve_collisions(poly) {
+    if (checks++ > polys.length*10) {
+        console.log("STACK OVERFLOW");
+        return;
+    }
     for (let i = 0; i < polys.length; i++) {
         if (i == poly) continue;
         if (collision(poly, i)) {
@@ -246,6 +256,8 @@ var spawnX;
 var spawnY;
 var loaded;
 
+var checks;
+
 /**
  * Draw a frame of the current state on the canvas and update state. 
  * @param {Number} now Time since starting the window (ms).
@@ -258,7 +270,7 @@ function draw(now) {
 
     drawSpawn();
     if (loaded) updatePolygon();
-    
+    checks = 0;
     resolve_collisions(selected);
 
     // Draw all polygons, with selected polygon on top
