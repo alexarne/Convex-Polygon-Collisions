@@ -38,23 +38,26 @@ function collision_SAT(p1, p2) {
             let min2 = minmax2[0];
             let max2 = minmax2[1];
 
+            // If overlap, continue, otherwise, they are separated
+            if (max2 < min1 || max1 < min2) return false;
+
             let currentOverlap = Math.min(max1, max2) - Math.max(min1, min2);
             if (isNaN(overlap)) {
                 overlap = currentOverlap;
             } else {
                 overlap = Math.min(currentOverlap, overlap);
             }
-
-            // If overlap, continue, otherwise, they are separated
-            if (max2 < min1 || max1 < min2) return false;
         }
     }
     let d = [p1.x-p2.x, p1.y-p2.y];
-    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]) * 50;    // what ¯\_(ツ)_/¯
-    p2.x -= overlap * d[0] / s;
-    p2.y -= overlap * d[1] / s;
-    // console.log((overlap * d[0] / s) + " " + (overlap * d[1] / s));
-    // console.log(p1.x + " " + p1.y);
+    let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]) * 40;    // what ¯\_(ツ)_/¯
+    if (p2.pushable) {
+        p2.x -= overlap * d[0] / s;
+        p2.y -= overlap * d[1] / s;
+    } else {
+        p1.x += overlap * d[0] / s;
+        p1.y += overlap * d[1] / s;
+    }
     return true;
 }
 
@@ -97,8 +100,8 @@ function dot2D(v1, v2) {
  */
 function collision_DIAG(p1, p2) {
     let collided = false;
-    let points1 = p2.getPoints();
-    let points2 = p1.getPoints();
+    let points1 = p1.getPoints();
+    let points2 = p2.getPoints();
     let poly1 = p2;
 
     // Test all sides of p1, then all sides of p2
@@ -111,14 +114,14 @@ function collision_DIAG(p1, p2) {
         }
         
         // Check diagonals of polygon...
-        for (let p = 0; p < points1.length; p++) {
+        for (let p = 0; p < points2.length; p++) {
             let line_r1s = [spawnX + poly1.x, spawnY + poly1.y];
-            let line_r1e = points1[p];
+            let line_r1e = points2[p];
             let displacement = [0, 0];
             // ...against edges of the other
-            for (let q = 0; q < points2.length; q++) {
-                let line_r2e = points2[q];
-                let line_r2s = points2[(q+1) % points2.length];
+            for (let q = 0; q < points1.length; q++) {
+                let line_r2e = points1[q];
+                let line_r2s = points1[(q+1) % points1.length];
                 // Line segment intersection
                 let h = (line_r2e[0]-line_r2s[0])*(line_r1s[1]-line_r1e[1]) - (line_r1s[0]-line_r1e[0])*(line_r2e[1]-line_r2s[1]);
                 let t1 = ((line_r2s[1]-line_r2e[1])*(line_r1s[0]-line_r2s[0]) + (line_r2e[0]-line_r2s[0])*(line_r1s[1]-line_r2s[1])) / h;
@@ -130,8 +133,13 @@ function collision_DIAG(p1, p2) {
                 }
             }
             // Use margin to account for rounding errors
-            p2.y += displacement[1] * (shape == 0 ? -1 : +1) * 1.000001;
-            p2.x += displacement[0] * (shape == 0 ? -1 : +1) * 1.000001;
+            if (p2.pushable) {
+                p2.y += displacement[1] * (shape == 0 ? -1 : +1) * 1.000001;
+                p2.x += displacement[0] * (shape == 0 ? -1 : +1) * 1.000001;
+            } else {
+                p1.y += displacement[1] * (shape == 0 ? +1 : -1) * 1.000001;
+                p1.x += displacement[0] * (shape == 0 ? +1 : -1) * 1.000001;
+            }
         }
     }
     return collided;
@@ -147,7 +155,8 @@ function resolve_collisions(poly) {
     for (let i = 0; i < polys.length; i++) {
         if (i == poly) continue;
         if (collision(poly, i)) {
-            resolve_collisions(i);
+            // We know that if the other is not pushable, the first must've been moved
+            resolve_collisions(polys[i].pushable ? i : poly);
         }
     }
 }
@@ -160,12 +169,12 @@ var algo;
  * @returns {Boolean} True if the polygons previously collided.
  */
 function collision(poly, i) {
-    algo = 1;
+    algo = 0;
     let p1 = polys[poly];
     let p2 = polys[i];
 
     // Use bounding circles to determine if they are too far apart
-    if (Math.sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)) > p1.r + p2.r) return false;
+    if (Math.sqrt((p1.x-p2.x)*(p1.x-p2.x)+(p1.y-p2.y)*(p1.y-p2.y)) > p1.r+p2.r) return false;
 
     switch (algo) {
         case 0:
@@ -208,7 +217,7 @@ window.onload = function() {
 
     updateSize();
 
-    polys[0] = new Polygon(5, true, "#A0A0A0");
+    polys[0] = new Polygon(5, true);
     selected = 0;
 
     draw();
@@ -249,7 +258,7 @@ function draw(now) {
 
     drawSpawn();
     if (loaded) updatePolygon();
-
+    
     resolve_collisions(selected);
 
     // Draw all polygons, with selected polygon on top
@@ -333,9 +342,8 @@ function addPolygon() {
         return;
     }
     let pushable = document.getElementById("pushable").checked;
-    let color = document.getElementById("color").value;
     let newPlace = polys.length;
-    polys[newPlace] = new Polygon(sides, pushable, color);
+    polys[newPlace] = new Polygon(sides, pushable);
     // Check if new polygon collides with other polygons and if so, highlight them and delete the created polygon
     selected = newPlace;
 }
@@ -405,10 +413,13 @@ function mouseClick(evt) {
     }
 }
 
-var max = 40;
+// Maximum and minimum number of sides
+var max = 10;
 var min = 3;
 
-
+/**
+ * Increment the user input value for the amount of sides of the new polygon.
+ */
 function incrSides() {
     let value = parseInt(document.getElementById("sides-value").innerHTML);
     if (value < max) {
@@ -418,6 +429,9 @@ function incrSides() {
     }
 }
 
+/**
+ * Decrement the user input value for the amount of sides of the new polygon.
+ */
 function decrSides() {
     let value = parseInt(document.getElementById("sides-value").innerHTML)
     if (value > min) {
@@ -439,12 +453,12 @@ class Polygon {
     sides;
     pushable;
 
-    constructor(sides, pushable, color) {
+    constructor(sides, pushable) {
         this.x = 0;
         this.y = 0;
         this.r = 50;
         this.rot = 0;
-        this.c = color;
+        this.c = pushable ? "#A0A0A0" : "#505050";
         this.sides = sides;
         this.pushable = pushable;
         

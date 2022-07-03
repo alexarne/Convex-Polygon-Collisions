@@ -38,7 +38,6 @@ The following information can also be accessed by clicking on the "Help" button 
 
 ## Intuitive Understanding
 
-
 * **Separating Axis Theorem**
 
     > Two convex objects do not overlap if there exists a line (called axis) onto which the two objects' projections do not overlap.
@@ -48,3 +47,9 @@ The following information can also be accessed by clicking on the "Help" button 
 * **Diagonals**
 
     If any edge of one polygon intersects with any line from another polygon's center to one of its vertices, the two polygons overlap. This is because in order to overlap, part of one polygon must exist within the other, which is only possible if a vertex exists within it. Furthermore, the resolution for the algorithm then becomes the distance from the intersection to the point which overlaps the other polygon, which simplifies the process of obtaining a resolution.
+
+## Difficulties Encountered
+
+* **Chain Collisions**
+
+    One polygon may be pushed into another, causing a chain reaction. The solution is then that we have to redo our collision checks if a polygon was moved, which can be simplified to checking only if the moved polygon collides with any polygons. The initial implementation resulted in occasional stack overflows due to checking polygons back and forth. This is believed to have been caused by floating point imprecision where, although a collision was resolved, it may be found that it still overlaps the other polygon in another iteration. Therefore, we displace the polygon by a little more than what has been calculated. 

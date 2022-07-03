@@ -19,15 +19,15 @@ html, body {
     bottom: 10%;
     transform: translate(-50%, 0);
     text-align: center;
-    width: 300px;
+    width: 200px;
     background-color: whitesmoke;
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 20px;
 }
 
 #gridLayout {
     display: grid;
-    grid-template-columns: 33% 33% 33%;
+    grid-template-columns: 50% 50%;
 }
 
 #sides-container {
@@ -106,24 +106,6 @@ html, body {
 #pushable {
     height: 30px;
     width: 30px;
-    outline: none;
-}
-
-#color-container {
-    
-}
-
-#color-label {
-
-}
-
-#color-div {
-    margin-top: 5px;
-}
-
-#color {
-    height: 37px;
-    width: 37px;
     outline: none;
 }
 
