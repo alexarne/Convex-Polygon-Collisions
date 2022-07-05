@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
     <canvas id="gc"></canvas>
     <img style="display:none" id="spawn" src="assets/spawn.png">
+
     <div id="inputSection" class="noselect">
         <div id="gridLayout">
             <div id="sides-container">
@@ -33,6 +34,7 @@
             <button id="submit" type="button" onclick="addPolygon()">Create Polygon</button>
         </div>
     </div>
+
     <div id="buttons">
         <button id="help">
             ?
@@ -40,6 +42,10 @@
         <button id="settings">
             S
         </button>
+    </div>
+
+    <div id="algoText">
+        <h1 id="algoText-algo"></h1>
     </div>
 </body>
 </html>

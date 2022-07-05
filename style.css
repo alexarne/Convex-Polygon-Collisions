@@ -133,6 +133,15 @@ html, body {
     height: 30px;
 }
 
+#algoText-algo {
+    position: absolute;
+    color: whitesmoke;
+    margin: 0;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+}
+
 /* Credit: https://stackoverflow.com/a/4407335 */
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */

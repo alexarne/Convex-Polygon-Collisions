@@ -173,13 +173,30 @@ function resolve_collisions(poly) {
 
 var algo;
 /**
+ * Updates the algorithm which ought to be used for collisions.
+ * @param {Number} id Index for the new algorithm.
+ */
+function updateAlgo(id) {
+    algo = id;
+    let text = "Algorithm:<br>";
+    switch (algo) {
+        case 0:
+            text += "Separating Axis Theorem";
+            break;
+        case 1: 
+            text += "Diagonals";
+            break;
+    }
+    document.getElementById("algoText-algo").innerHTML = text;
+}
+
+/**
  * Use the selected algorithm to resolve a collision.
  * @param {Number} poly Index of the first polygon.
  * @param {Number} i Index of the second polygon.
  * @returns {Boolean} True if the polygons previously collided.
  */
 function collision(poly, i) {
-    algo = 0;
     let p1 = polys[poly];
     let p2 = polys[i];
 
@@ -224,6 +241,7 @@ window.onload = function() {
     backward = false;
     polys = [];
     spawnHeight = 130
+    updateAlgo(0);
 
     updateSize();
 
@@ -270,8 +288,13 @@ function draw(now) {
 
     drawSpawn();
     if (loaded) updatePolygon();
+
+    // 
     checks = 0;
+    let pBefore = polys[selected].pushable;
+    polys[selected].pushable = true;
     resolve_collisions(selected);
+    polys[selected].pushable = pBefore;
 
     // Draw all polygons, with selected polygon on top
     polys.forEach((element, index) => {
