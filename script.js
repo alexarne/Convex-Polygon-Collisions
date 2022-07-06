@@ -231,18 +231,18 @@ window.onload = function() {
     document.getElementById("changeInput").addEventListener("click", toggleInput);
 
     // Clickable controls
-    document.getElementById("inputSection-page2-btnUp").onmousedown = () => {forward_alt = true;};
-    document.getElementById("inputSection-page2-btnUp").onmouseup = () => {forward_alt = false;};
-    document.getElementById("inputSection-page2-btnUp").onmouseout = () => {forward_alt = false;};
-    document.getElementById("inputSection-page2-btnDown").onmousedown = () => {backward_alt = true;};
-    document.getElementById("inputSection-page2-btnDown").onmouseup = () => {backward_alt = false;};
-    document.getElementById("inputSection-page2-btnDown").onmouseout = () => {backward_alt = false;};
-    document.getElementById("inputSection-page2-btnLeft").onmousedown = () => {left_alt = true;};
-    document.getElementById("inputSection-page2-btnLeft").onmouseup = () => {left_alt = false;};
-    document.getElementById("inputSection-page2-btnLeft").onmouseout = () => {left_alt = false;};
-    document.getElementById("inputSection-page2-btnRight").onmousedown = () => {right_alt = true;};
-    document.getElementById("inputSection-page2-btnRight").onmouseup = () => {right_alt = false;};
-    document.getElementById("inputSection-page2-btnRight").onmouseout = () => {right_alt = false;};
+    document.getElementById("inputSection-page2-btnUp").onpointerdown = () => {forward_alt = true;};
+    document.getElementById("inputSection-page2-btnUp").onpointerup = () => {forward_alt = false;};
+    document.getElementById("inputSection-page2-btnUp").onpointerout = () => {forward_alt = false;};
+    document.getElementById("inputSection-page2-btnDown").onpointerdown = () => {backward_alt = true;};
+    document.getElementById("inputSection-page2-btnDown").onpointerup = () => {backward_alt = false;};
+    document.getElementById("inputSection-page2-btnDown").onpointerout = () => {backward_alt = false;};
+    document.getElementById("inputSection-page2-btnLeft").onpointerdown = () => {left_alt = true;};
+    document.getElementById("inputSection-page2-btnLeft").onpointerup = () => {left_alt = false;};
+    document.getElementById("inputSection-page2-btnLeft").onpointerout = () => {left_alt = false;};
+    document.getElementById("inputSection-page2-btnRight").onpointerdown = () => {right_alt = true;};
+    document.getElementById("inputSection-page2-btnRight").onpointerup = () => {right_alt = false;};
+    document.getElementById("inputSection-page2-btnRight").onpointerout = () => {right_alt = false;};
     
     canv.addEventListener('click', mouseClick);
 
@@ -489,7 +489,7 @@ var min = 3;
 function incrSides() {
     let value = parseInt(document.getElementById("sides-value").innerHTML);
     if (value < max) {
-        document.getElementById("sides-value").innerHTML = value + 1
+        document.getElementById("sides-value").innerHTML = value + 1;
     } else {
         document.getElementById("sides-value").innerHTML = min;
     }
@@ -501,7 +501,7 @@ function incrSides() {
 function decrSides() {
     let value = parseInt(document.getElementById("sides-value").innerHTML)
     if (value > min) {
-        document.getElementById("sides-value").innerHTML = value - 1
+        document.getElementById("sides-value").innerHTML = value - 1;
     } else {
         document.getElementById("sides-value").innerHTML = max;
     }
