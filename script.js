@@ -225,8 +225,25 @@ window.onload = function() {
     
     document.addEventListener("keydown", keyDown);
     document.addEventListener("keyup", keyUp);
+
     document.getElementById("sides-next").addEventListener("click", incrSides);
     document.getElementById("sides-prev").addEventListener("click", decrSides);
+    document.getElementById("changeInput").addEventListener("click", toggleInput);
+
+    // Clickable controls
+    document.getElementById("inputSection-page2-btnUp").onmousedown = () => {forward_alt = true;};
+    document.getElementById("inputSection-page2-btnUp").onmouseup = () => {forward_alt = false;};
+    document.getElementById("inputSection-page2-btnUp").onmouseout = () => {forward_alt = false;};
+    document.getElementById("inputSection-page2-btnDown").onmousedown = () => {backward_alt = true;};
+    document.getElementById("inputSection-page2-btnDown").onmouseup = () => {backward_alt = false;};
+    document.getElementById("inputSection-page2-btnDown").onmouseout = () => {backward_alt = false;};
+    document.getElementById("inputSection-page2-btnLeft").onmousedown = () => {left_alt = true;};
+    document.getElementById("inputSection-page2-btnLeft").onmouseup = () => {left_alt = false;};
+    document.getElementById("inputSection-page2-btnLeft").onmouseout = () => {left_alt = false;};
+    document.getElementById("inputSection-page2-btnRight").onmousedown = () => {right_alt = true;};
+    document.getElementById("inputSection-page2-btnRight").onmouseup = () => {right_alt = false;};
+    document.getElementById("inputSection-page2-btnRight").onmouseout = () => {right_alt = false;};
+    
     canv.addEventListener('click', mouseClick);
 
     // Set global variables
@@ -239,6 +256,10 @@ window.onload = function() {
     left = false;
     forward = false;
     backward = false;
+    right_alt = false;
+    left_alt = false;
+    forward_alt = false;
+    backward_alt = false;
     polys = [];
     spawnHeight = 130
     updateAlgo(0);
@@ -276,6 +297,12 @@ var loaded;
 
 var checks;
 
+// Clickable controls
+var forward_alt;
+var backward_alt;
+var right_alt;
+var left_alt;
+
 /**
  * Draw a frame of the current state on the canvas and update state. 
  * @param {Number} now Time since starting the window (ms).
@@ -289,7 +316,7 @@ function draw(now) {
     drawSpawn();
     if (loaded) updatePolygon();
 
-    // 
+    // Treat selected polygon as pushable
     checks = 0;
     let pBefore = polys[selected].pushable;
     polys[selected].pushable = true;
@@ -354,13 +381,17 @@ function drawSpawn() {
  * Update the selected polygon with respect to user action.
  */
 function updatePolygon() {
-    if (!(right && left)) {
-        if (right) polys[selected].turnRight();
-        if (left) polys[selected].turnLeft();
+    let r = right | right_alt;
+    let l = left | left_alt;
+    let f = forward | forward_alt;
+    let b = backward | backward_alt;
+    if (!(r && l)) {
+        if (r) polys[selected].turnRight();
+        if (l) polys[selected].turnLeft();
     }
-    if (!(forward && backward)) {
-        if (forward) polys[selected].moveForwards();
-        if (backward) polys[selected].moveBackwards();
+    if (!(f && b)) {
+        if (f) polys[selected].moveForwards();
+        if (b) polys[selected].moveBackwards();
     }
 }
 
@@ -474,6 +505,25 @@ function decrSides() {
     } else {
         document.getElementById("sides-value").innerHTML = max;
     }
+}
+
+/**
+ * Change the page displayed in the input section (between creating polygons
+ * and movement controls).
+ */
+function toggleInput() {
+    let page1_visible = getComputedStyle(document.getElementById("inputSection-page1")).visibility == "visible";
+    let visible;
+    let hidden;
+    if (page1_visible) {
+        visible = "inputSection-page2";
+        hidden = "inputSection-page1";
+    } else {
+        visible = "inputSection-page1";
+        hidden = "inputSection-page2";
+    }
+    document.getElementById(visible).style.visibility = "visible";
+    document.getElementById(hidden).style.visibility = "hidden";
 }
 
 /**

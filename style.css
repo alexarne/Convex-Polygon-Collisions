@@ -19,10 +19,65 @@ html, body {
     bottom: 10%;
     transform: translate(-50%, 0);
     text-align: center;
-    width: 200px;
+    width: 220px;
+    height: 110px;
     background-color: whitesmoke;
     border-radius: 5px;
     padding: 20px;
+}
+
+#inputSection-page1 {
+    width: 175px;
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+
+#inputSection-page2 {
+    visibility: hidden;
+    height: 110px;
+    width: 175px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    display: grid;
+	grid-template-rows: 50% 50%;
+	grid-template-columns: 33% 33% 33%;
+    top: 20px;
+}
+
+#inputSection-page2 > * {
+    width: 2rem;
+    height: 2rem;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    outline: none;
+}
+
+#inputSection-page2-btnUp {
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+#inputSection-page2-btnDown {
+    
+}
+
+#inputSection-page2-btnLeft {
+    
+}
+
+#inputSection-page2-btnRight {
+    
+}
+
+#changeInput {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    outline: none;
 }
 
 #gridLayout {
@@ -122,24 +177,25 @@ html, body {
 
 #buttons {
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 1rem;
+    top: 1rem;
     display: grid;
-    gap: 5px;
+    gap: 0.5rem;
 }
 
 #buttons > * {
-    width: 30px;
-    height: 30px;
+    width: 2rem;
+    height: 2rem;
 }
 
 #algoText-algo {
     position: absolute;
     color: whitesmoke;
     margin: 0;
-    top: 10px;
-    left: 10px;
+    top: 1rem;
+    left: 1rem;
     font-size: 24px;
+    width: calc(100vw - 5rem);
 }
 
 /* Credit: https://stackoverflow.com/a/4407335 */
