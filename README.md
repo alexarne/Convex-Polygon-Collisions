@@ -62,7 +62,7 @@ The following information can also be accessed by clicking on the "Help" button 
 
 ## Known Bugs
 
-* 
+* The "Diagonals" algorithm displaces polygons by too much if there are multiple polygons with many sides (>40), all perfectly lined up and pushed from one end. This is believed to be caused by margins increasing with each collision and that each margin is greater for polygons with many sides. Currently, the only way to spawn such polygons is by typing `document.getElementById("sides-value").innerHTML = 40` into the console
 
 ## Final Words
 
