@@ -12,9 +12,9 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * The user can choose which algorithm to use by clicking on the alternatives in the top-left corner:
 
-    * Separating Axis Theorem, Static (SAT/STATIC)
+    * Separating Axis Theorem
 
-    * Diagonals, Static (DIAG/STATIC)
+    * Diagonals
 
 * The user can control the selected polygon by pressing buttons W, A, S, and D for moving forwards, rotating to its left, moving backwards, and rotating to its right, respectively. Touch control is available by switching the view of the UI at the bottom
 
@@ -60,9 +60,13 @@ The following information can also be accessed by clicking on the "Help" button 
 
     Previously, if a polygon was pushed by a non-pushable polygon into two non-pushable polygons (i.e., trapping it), a stack overflow would occur and the polygon would be placed somewhat incorrectly. This happened since the pushing polygon created a space in which the pushed polygon was unable to fit. The key detail here is that the pushing polygon had to be non-pushable, which meant it would not be able to be pushed back by the pushed polygon, given the solution for chain collisions. The solution was then to treat the selected polygon as pushable, no matter its actual value, so that it is unable to push polygons into spaces where they cannot fit.
 
+* **Multiple Collision Points**
+
+    If there were multiple contact points in a collision, the "Diagonals" algorithm would not respect that and would instead introduce noise in the resolution, resulting in movement from side to side in a perfect edge-to-edge collision. To solve that, we now use the updated points after displacement within the algorithm instead of only using the points for the polygons at the time of starting the algorithm (therefore; respecting any displacements which occur within the algorithm, before finishing).
+
 ## Known Bugs
 
-* The "Diagonals" algorithm displaces polygons by too much if there are multiple polygons with many sides (>40), all perfectly lined up and pushed from one end. This is believed to be caused by margins increasing with each collision and that each margin is greater for polygons with many sides. Currently, the only way to spawn such polygons is by typing `document.getElementById("sides-value").innerHTML = 40` into the console
+* The "Diagonals" algorithm displaces polygons by too much if there are multiple contact points (can be tested by creating at least 5 polygons with an even amount of sides on a perfect line by not rotating them, and then pushing the line from one end). This is believed to be caused by improper vector additions which increases the space it moves away from the polygon instead of only changing its direction.
 
 ## Final Words
 

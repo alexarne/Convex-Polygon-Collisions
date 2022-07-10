@@ -191,6 +191,7 @@ html, body {
 #algoText-algo {
     position: absolute;
     color: whitesmoke;
+    pointer-events: none;
     margin: 0;
     top: 1rem;
     left: 1rem;

@@ -108,21 +108,23 @@ function collision_DIAG(p1, p2) {
     let points1 = p1.getPoints();
     let points2 = p2.getPoints();
     let poly1 = p2;
-
+    
     // Test all sides of p1, then all sides of p2
     for (let shape = 0; shape < 2; shape++) {
         if (shape == 1) {
             poly1 = p1;
-            let tmp = points1;
-            points1 = points2;
-            points2 = tmp;
+            // let tmp = points1;
+            // points1 = points2;
+            // points2 = tmp;
+            points1 = p2.getPoints();
+            points2 = p1.getPoints();
         }
         
+        let displacement = [0, 0];
         // Check diagonals of polygon...
         for (let p = 0; p < points2.length; p++) {
             let line_r1s = [spawnX + poly1.x, spawnY + poly1.y];
             let line_r1e = points2[p];
-            let displacement = [0, 0];
             // ...against edges of the other
             for (let q = 0; q < points1.length; q++) {
                 let line_r2e = points1[q];
@@ -137,15 +139,16 @@ function collision_DIAG(p1, p2) {
                     collided = true;
                 }
             }
-            // Use margin to account for rounding errors
-            let margin = 1.000001;
-            if (p2.pushable) {
-                p2.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
-                p2.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
-            } else {
-                p1.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
-                p1.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
-            }
+        }
+        // Update polygon last
+        // Use margin to account for rounding errors
+        let margin = 1.000001;
+        if (p2.pushable) {
+            p2.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
+            p2.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
+        } else {
+            p1.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
+            p1.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
         }
     }
     return collided;
@@ -262,7 +265,7 @@ window.onload = function() {
     backward_alt = false;
     polys = [];
     spawnHeight = 130
-    updateAlgo(0);
+    updateAlgo(1);
 
     updateSize();
 
