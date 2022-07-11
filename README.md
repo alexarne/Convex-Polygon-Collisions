@@ -56,6 +56,10 @@ The following information can also be accessed by clicking on the "Help" button 
 
     One polygon may be pushed into another, causing a chain reaction. The solution is then that we have to redo our collision checks if a polygon was moved, which can be simplified to checking only if the moved polygon collides with any polygons. The initial implementation resulted in occasional stack overflows due to checking polygons back and forth infinitely many times. This is believed to have been caused by floating point imprecisions where, although a collision was resolved, it may be found that it still overlaps the other polygon in another iteration. Therefore, we displace the polygon by a little more than what has been calculated. Of course, this is not a scientific solution and stack overflows may still occur, but that has not happened during my own testing.
 
+* **Stack Overflows**
+
+    As a direct cause to the chain collisions implementation, there is a high risk for infinite loops and the like which can be devastating to the user experience. In order to prevent this, a "killswitch" has been introduced where the algorithm will abandon the current chain collision check if it goes on for too long, and print it to the console. The amount of times this happens has been greatly reduced during development, but it may still occur.
+
 * **Crammed Spaces**
 
     Previously, if a polygon was pushed by a non-pushable polygon into two non-pushable polygons (i.e., trapping it), a stack overflow would occur and the polygon would be placed somewhat incorrectly. This happened since the pushing polygon created a space in which the pushed polygon was unable to fit. The key detail here is that the pushing polygon had to be non-pushable, which meant it would not be able to be pushed back by the pushed polygon, given the solution for chain collisions. The solution was then to treat the selected polygon as pushable, no matter its actual value, so that it is unable to push polygons into spaces where they cannot fit.
