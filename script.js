@@ -113,14 +113,12 @@ function collision_DIAG(p1, p2) {
     for (let shape = 0; shape < 2; shape++) {
         if (shape == 1) {
             poly1 = p1;
-            // let tmp = points1;
-            // points1 = points2;
-            // points2 = tmp;
             points1 = p2.getPoints();
             points2 = p1.getPoints();
         }
         
         let displacement = [0, 0];
+        let intersections = 0;
         // Check diagonals of polygon...
         for (let p = 0; p < points2.length; p++) {
             let line_r1s = [spawnX + poly1.x, spawnY + poly1.y];
@@ -136,19 +134,24 @@ function collision_DIAG(p1, p2) {
                 if (t1 >= 0 && t1 < 1 && t2 >= 0 && t2 < 1) { // Line segments crossing
                     displacement[0] += (1-t1) * (line_r1e[0]-line_r1s[0]);
                     displacement[1] += (1-t1) * (line_r1e[1]-line_r1s[1]);
+                    intersections++;
                     collided = true;
                 }
             }
         }
         // Update polygon last
-        // Use margin to account for rounding errors
-        let margin = 1.000001;
-        if (p2.pushable) {
-            p2.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
-            p2.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
-        } else {
-            p1.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
-            p1.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
+        if (intersections != 0) {
+            // Use margin to account for rounding errors
+            let margin = 1.000001;
+            displacement[0] /= intersections;
+            displacement[1] /= intersections;
+            if (p2.pushable) {
+                p2.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
+                p2.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
+            } else {
+                p1.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
+                p1.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
+            }
         }
     }
     return collided;

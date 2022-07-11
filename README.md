@@ -62,11 +62,11 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * **Multiple Collision Points**
 
-    If there were multiple contact points in a collision, the "Diagonals" algorithm would not respect that and would instead introduce noise in the resolution, resulting in movement from side to side in a perfect edge-to-edge collision. To solve that, we now use the updated points after displacement within the algorithm instead of only using the points for the polygons at the time of starting the algorithm (therefore; respecting any displacements which occur within the algorithm, before finishing).
+    If there were multiple contact points in a collision, the "Diagonals" algorithm would not respect that and would instead introduce noise in the resolution, resulting in movement from side to side in a perfect edge-to-edge collision. To solve that, we now use the updated points after displacement within the algorithm instead of only using the points for the polygons at the time of starting the algorithm (therefore; respecting any displacements which occur within the algorithm, before finishing). Another issue was that the displacement vectors (resolutions) would add up and result in a displacement value that was too high, due to improver vector additions. By respecting the amount of vectors added, we can reduce the displacement value by a factor of that amount. 
 
 ## Known Bugs
 
-* The "Diagonals" algorithm displaces polygons by too much if there are multiple contact points (can be tested by creating at least 5 polygons with an even amount of sides on a perfect line by not rotating them, and then pushing the line from one end). This is believed to be caused by improper vector additions which increases the space it moves away from the polygon instead of only changing its direction.
+* 
 
 ## Final Words
 
