@@ -440,6 +440,9 @@ function keyDown(evt) {
         case "D":
             right = true;
             break;
+        case "B":
+            polys[selected].blink();
+            break;
     }
 }
 
@@ -542,6 +545,12 @@ class Polygon {
     sides;
     pushable;
 
+    blinking;
+    blinkOnID;
+    blinkOffID;
+    delayID;
+    stopID;
+
     constructor(sides, pushable) {
         this.x = 0;
         this.y = 0;
@@ -550,6 +559,7 @@ class Polygon {
         this.c = pushable ? "#A0A0A0" : "#505050";
         this.sides = sides;
         this.pushable = pushable;
+        this.blinking = false;
         
         // Get polygon height to center properly, inefficient but reusing code
         if (sides % 2 == 1) {
@@ -565,7 +575,8 @@ class Polygon {
      * @param {Boolean} selected If this polygon is currently selected.
      */
     draw(selected) {
-        ctx.fillStyle = selected ? LightenColor(this.c, 10) : this.c;
+        let color = this.blinking ? "#8d3939" : this.c;
+        ctx.fillStyle = selected ? LightenColor(color, 10) : color;
         ctx.beginPath();
         
         const points = this.getPoints();
@@ -581,6 +592,46 @@ class Polygon {
             ctx.arc(spawnX+this.x+(this.r+8)*Math.cos(Math.PI/2-this.rot), spawnY+this.y-(this.r+8)*Math.sin(Math.PI/2-this.rot), 3, 0, 2 * Math.PI);
             ctx.fill();
         }
+    }
+
+    /**
+     * Make the polygon blink.
+     */
+    blink() {
+        // Durations in milliseconds
+        let blinkOn = 500;
+        let blinkOff = 300;
+        let cycle = blinkOn+blinkOff;
+        let blinks = 3;
+
+        this.clearIDs();
+        
+        this.blinking = true;
+        this.blinkOnID = setInterval(() => {
+            this.blinking = true;
+        }, cycle);
+
+        this.delayID = setTimeout(() => {
+            this.blinking = false;
+            this.blinkOffID = setInterval(() => {
+                this.blinking = false;
+            }, cycle);
+        }, blinkOn);
+
+        this.stopID = setTimeout(() => {
+            this.blinking = false;
+            this.clearIDs();
+        }, blinks*cycle-blinkOff);
+    }
+
+    /**
+     * Clear all Interval and Timeout IDs associated with blinking.
+     */
+    clearIDs() {
+        clearInterval(this.blinkOnID);
+        clearInterval(this.blinkOffID);
+        clearTimeout(this.delayID);
+        clearTimeout(this.stopID);
     }
 
     /**
