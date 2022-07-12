@@ -399,23 +399,70 @@ function updatePolygon() {
     }
 }
 
+// Maximum and minimum number of sides
+var max = 10;
+var min = 3;
+
 /**
- * Attempt to add a polygon with the user's inputs. Highlight any 
- * problems which may prevent the polygon from being created
+ * Increment the user input value for the amount of sides of the new polygon.
+ */
+function incrSides() {
+    let value = parseInt(document.getElementById("sides-value").innerHTML);
+    if (value < max) {
+        document.getElementById("sides-value").innerHTML = value + 1;
+    } else {
+        document.getElementById("sides-value").innerHTML = min;
+    }
+}
+
+/**
+ * Decrement the user input value for the amount of sides of the new polygon.
+ */
+function decrSides() {
+    let value = parseInt(document.getElementById("sides-value").innerHTML)
+    if (value > min) {
+        document.getElementById("sides-value").innerHTML = value - 1;
+    } else {
+        document.getElementById("sides-value").innerHTML = max;
+    }
+}
+
+/**
+ * Attempt to add a polygon with the user's inputs. Correct/highlight
+ * any problems which may prevent the polygon from being created
  * (input is not allowed or existing polygons blocking it).
  */
 function addPolygon() {
     let sides = parseInt(document.getElementById("sides-value").innerHTML);
-    if (sides > 40 || sides < 3) {
-        // Show error on sides input field
-
-        return;
+    if (sides > max) {
+        document.getElementById("sides-value").innerHTML = max;
+        sides = max;
     }
-    let pushable = document.getElementById("pushable").checked;
+    if (sides < min) {
+        document.getElementById("sides-value").innerHTML = min;
+        sides = min;
+    }
     let newPlace = polys.length;
-    polys[newPlace] = new Polygon(sides, pushable);
+    console.log(polys.length);
+    polys[newPlace] = new Polygon(sides, true);
+
     // Check if new polygon collides with other polygons and if so, highlight them and delete the created polygon
-    selected = newPlace;
+    let collided = false;
+    for (let i = 0; i < newPlace; i++) {
+        if (collision(i, newPlace)) {
+            polys[i].blink();
+            collided = true;
+            polys[newPlace] = new Polygon(sides, true);     // Tacky solution; respawn since it could've been moved
+        }
+    }
+    if (!collided) {
+        let pushable = document.getElementById("pushable").checked;
+        polys[newPlace] = new Polygon(sides, pushable);
+        selected = newPlace;
+    } else {
+        polys.pop();
+    }
+    console.log(polys.length);
 }
 
 /**
@@ -483,34 +530,6 @@ function mouseClick(evt) {
             selected = i;
             break;
         }
-    }
-}
-
-// Maximum and minimum number of sides
-var max = 10;
-var min = 3;
-
-/**
- * Increment the user input value for the amount of sides of the new polygon.
- */
-function incrSides() {
-    let value = parseInt(document.getElementById("sides-value").innerHTML);
-    if (value < max) {
-        document.getElementById("sides-value").innerHTML = value + 1;
-    } else {
-        document.getElementById("sides-value").innerHTML = min;
-    }
-}
-
-/**
- * Decrement the user input value for the amount of sides of the new polygon.
- */
-function decrSides() {
-    let value = parseInt(document.getElementById("sides-value").innerHTML)
-    if (value > min) {
-        document.getElementById("sides-value").innerHTML = value - 1;
-    } else {
-        document.getElementById("sides-value").innerHTML = max;
     }
 }
 
