@@ -253,8 +253,8 @@ window.onload = function() {
     canv.addEventListener('click', mouseClick);
 
     // Set global variables
-    rotationSpeedDefault = 0.03;
-    moveSpeedDefault = 1.3;
+    rotationSpeedDefault = 4.5;     // Radians per second
+    moveSpeedDefault = 200;         // Pixels per second
     loaded = false;
 
     rotation = 0;
@@ -315,11 +315,10 @@ var left_alt;
  */
 function draw(now) {
     window.requestAnimationFrame(draw);
-
-    updateValues(now);
     updateSize();
-
     drawSpawn();
+
+    updateMovementValues(now);
     if (loaded) updatePolygon();
 
     // Treat selected polygon as pushable
@@ -344,14 +343,13 @@ var prevTime
  * impact the user experience too much.
  * @param {Number} now Time since starting the window (ms).
  */
-function updateValues(now) {
-    let frameTime = now - prevTime;
+function updateMovementValues(now) {
+    let elapsedTime = (now - prevTime)/1000;
     prevTime = now;
-    let fps = 1000/frameTime;
-    let ratio = 144/fps;
-    rotationSpeed = rotationSpeedDefault*ratio;
-    moveSpeed = moveSpeedDefault*ratio;
-    if (!isNaN(fps)) loaded = true;    // Flush first 2 cycles, is undefined
+    // let fps = 1/elapsedTime;
+    rotationSpeed = rotationSpeedDefault*elapsedTime;
+    moveSpeed = moveSpeedDefault*elapsedTime;
+    if (!isNaN(elapsedTime)) loaded = true;    // Flush first 2 cycles, is undefined
 }
 
 /**
