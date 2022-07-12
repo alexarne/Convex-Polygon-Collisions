@@ -70,7 +70,7 @@ The following information can also be accessed by clicking on the "Help" button 
 
 ## Known Bugs
 
-* 
+* During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, resulting in incorrectly placed polygons, and print it to the console.
 
 ## Final Words
 
