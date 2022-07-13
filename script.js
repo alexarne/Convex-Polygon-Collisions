@@ -318,7 +318,7 @@ function draw(now) {
     window.requestAnimationFrame(draw);
     updateSize();
     drawSpawn();
-
+    
     updateMovementValues(now);
     if (loaded) updatePolygon();
 
@@ -329,6 +329,7 @@ function draw(now) {
     resolve_collisions(selected);
     polys[selected].pushable = pBefore;
 
+    if (!loaded) polys[selected].blink();
     // Draw all polygons, with selected polygon on top
     polys.forEach((element, index) => {
         if (index != selected) element.draw(false);
@@ -354,8 +355,8 @@ function updateMovementValues(now) {
 }
 
 /**
- * Update the canvas' dimensions to reflect window size and set
- * origin (spawn).
+ * Update the canvas' dimensions to reflect window size, set
+ * origin (spawn), and resize input section.
  */
 function updateSize() {
     h = window.innerHeight;
@@ -364,6 +365,7 @@ function updateSize() {
     ctx.canvas.height = h;
     spawnX = w/2;
     spawnY = h*0.8-240 + spawnHeight/2;
+    document.getElementById("inputSection").style.transform = "translate(-50%, 0) scale(" + Math.min(1, w/280) + ")";
 }
 
 /**
@@ -485,9 +487,6 @@ function keyDown(evt) {
             break;
         case "D":
             right = true;
-            break;
-        case "B":
-            polys[selected].blink();
             break;
     }
 }
@@ -628,6 +627,7 @@ class Polygon {
      * Initialize the blinkTimer to make the polygon blink.
      */
     blink() {
+        // blinkTimer will become NaN if elapsedTime is NaN, and the blinking will be ignored
         this.blinkTimer = this.blinks*this.cycle - this.blinkOff;
     }
 
