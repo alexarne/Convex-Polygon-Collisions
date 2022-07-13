@@ -292,6 +292,7 @@ var rotationSpeedDefault;
 var moveSpeedDefault;
 var rotationSpeed;
 var moveSpeed;
+var elapsedTime;
 
 var polys;
 var selected;
@@ -344,7 +345,7 @@ var prevTime
  * @param {Number} now Time since starting the window (ms).
  */
 function updateMovementValues(now) {
-    let elapsedTime = (now - prevTime)/1000;
+    elapsedTime = (now - prevTime)/1000;
     prevTime = now;
     // let fps = 1/elapsedTime;
     rotationSpeed = rotationSpeedDefault*elapsedTime;
@@ -443,7 +444,6 @@ function addPolygon() {
         sides = min;
     }
     let newPlace = polys.length;
-    console.log(polys.length);
     polys[newPlace] = new Polygon(sides, true);
 
     // Check if new polygon collides with other polygons and if so, highlight them and delete the created polygon
@@ -462,7 +462,6 @@ function addPolygon() {
     } else {
         polys.pop();
     }
-    console.log(polys.length);
 }
 
 /**
@@ -564,11 +563,11 @@ class Polygon {
     sides;
     pushable;
 
-    blinking;
-    blinkOnID;
-    blinkOffID;
-    delayID;
-    stopID;
+    blinkOn;
+    blinkOff;
+    blinks;
+    cycle
+    blinkTimer;
 
     constructor(sides, pushable) {
         this.x = 0;
@@ -578,7 +577,13 @@ class Polygon {
         this.c = pushable ? "#A0A0A0" : "#505050";
         this.sides = sides;
         this.pushable = pushable;
-        this.blinking = false;
+        
+        // Durations in seconds
+        this.blinkOn = 0.5;
+        this.blinkOff = 0.3;
+        this.blinks = 3;
+        this.cycle = this.blinkOn+this.blinkOff;
+        this.blinkTimer = 0;
         
         // Get polygon height to center properly, inefficient but reusing code
         if (sides % 2 == 1) {
@@ -594,7 +599,13 @@ class Polygon {
      * @param {Boolean} selected If this polygon is currently selected.
      */
     draw(selected) {
-        let color = this.blinking ? "#8d3939" : this.c;
+        let color = this.c;
+        if (this.blinkTimer > 0) {
+            this.blinkTimer -= elapsedTime;
+            if (this.blinkTimer % this.cycle <= this.blinkOn) {
+                color = "#8d3939";
+            }
+        }
         ctx.fillStyle = selected ? LightenColor(color, 10) : color;
         ctx.beginPath();
         
@@ -612,45 +623,12 @@ class Polygon {
             ctx.fill();
         }
     }
-
+    
     /**
-     * Make the polygon blink.
+     * Initialize the blinkTimer to make the polygon blink.
      */
     blink() {
-        // Durations in milliseconds
-        let blinkOn = 500;
-        let blinkOff = 300;
-        let cycle = blinkOn+blinkOff;
-        let blinks = 3;
-
-        this.clearIDs();
-        
-        this.blinking = true;
-        this.blinkOnID = setInterval(() => {
-            this.blinking = true;
-        }, cycle);
-
-        this.delayID = setTimeout(() => {
-            this.blinking = false;
-            this.blinkOffID = setInterval(() => {
-                this.blinking = false;
-            }, cycle);
-        }, blinkOn);
-
-        this.stopID = setTimeout(() => {
-            this.blinking = false;
-            this.clearIDs();
-        }, blinks*cycle-blinkOff);
-    }
-
-    /**
-     * Clear all Interval and Timeout IDs associated with blinking.
-     */
-    clearIDs() {
-        clearInterval(this.blinkOnID);
-        clearInterval(this.blinkOffID);
-        clearTimeout(this.delayID);
-        clearTimeout(this.stopID);
+        this.blinkTimer = this.blinks*this.cycle - this.blinkOff;
     }
 
     /**
