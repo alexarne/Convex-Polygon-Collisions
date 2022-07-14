@@ -108,6 +108,9 @@ function collision_DIAG(p1, p2) {
     let points1 = p1.getPoints();
     let points2 = p2.getPoints();
     let poly1 = p2;
+
+    // Edge case if the points are exactly identical (two identical polygons spawned in a row)
+    if (samePoints(points1, points2)) return true;
     
     // Test all sides of p1, then all sides of p2
     for (let shape = 0; shape < 2; shape++) {
@@ -155,6 +158,33 @@ function collision_DIAG(p1, p2) {
         }
     }
     return collided;
+}
+
+/**
+ * Compare if two arrays contain the same points (unordered).
+ * @param {Array} points1 The first set of points.
+ * @param {Array} points2 The second set of points.
+ * @returns {Boolean} True if all points in points1 exist in points2, 
+ * and vice versa, false otherwise.
+ */
+function samePoints(points1, points2) {
+    if (points1.length != points2.length) return false;
+    if (points1.length == 0) return true;
+
+    // Sort to check points in increasing y-direction
+    let sorted1 = points1.sort((a, b) => {return a[1] - b[1]});
+    let sorted2 = points2.sort((a, b) => {return a[1] - b[1]});
+    // Sort to check points in increasing x-direction
+    sorted1 = sorted1.sort((a, b) => {return a[0] - b[0]});
+    sorted2 = sorted2.sort((a, b) => {return a[0] - b[0]});
+
+    let tolerance = 1e0;
+    for (let i = 0; i < sorted1.length; i++) {
+        for (let j = 0; j < 2; j++) {
+            if (Math.abs(sorted1[i][j] - sorted2[i][j]) > tolerance) return false;
+        }
+    }
+    return true;
 }
 
 /* ======================= ALGORITHM SELECTOR ======================= */
