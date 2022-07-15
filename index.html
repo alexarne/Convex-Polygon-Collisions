@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="script.js"></script>
+    <script defer src="script.js"></script>
     <canvas id="gc"></canvas>
     <img style="display:none" id="spawn" src="assets/spawn.png">
 
@@ -45,10 +45,10 @@
     </div>
 
     <div id="buttons" class="noselect">
-        <button id="help">
+        <button data-modal-target="#modal-help" id="help">
             ?
         </button>
-        <button id="settings">
+        <button data-modal-target="#modal-settings" id="settings">
             S
         </button>
     </div>
@@ -56,5 +56,29 @@
     <div id="algoText">
         <h1 id="algoText-algo"></h1>
     </div>
+
+    <div class="modal" id="modal-settings">
+        <div class="modal-header">
+            <div class="modal-title">Settings</div>
+            <button data-close-button class="modal-closeButton">&times;</button>
+        </div>
+        <div class="modal-body">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta aut sint debitis voluptatum voluptates placeat ut vero neque recusandae praesentium. Corporis, culpa totam. Nam, sed? Quasi dignissimos ea aperiam nobis ab cum minima tempora quibusdam, iure mollitia quos dolores? Dignissimos et alias cupiditate consequatur laborum doloribus optio voluptatem facere omnis error quae rem suscipit ad sint, deleniti minima esse voluptatum dicta expedita vel ex nulla. Perspiciatis corporis eum ab hic doloremque dolor doloribus, autem veritatis modi quibusdam molestiae iste harum?
+        </div>
+    </div>
+
+    <div class="modal" id="modal-help">
+        <div class="modal-header">
+            <div class="modal-title">Help</div>
+            <button data-close-button class="modal-closeButton">&times;</button>
+        </div>
+        <div class="modal-body">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia ut sunt id porro, cupiditate voluptatem nesciunt, delectus quo molestias deserunt aliquid provident, libero qui. Libero perspiciatis fuga ratione dicta vitae!
+        </div>
+    </div>
+
+
+    <div id="modal-overlay"></div>
+
 </body>
 </html>
