@@ -249,50 +249,88 @@ function collision(poly, i) {
 
 /* ======================= SUPPORTING CODE ======================= */
 
+// Modals; Tutorial and Settings
 const openModalButtons = document.querySelectorAll("[data-modal-target]");
 const closeModalButtons = document.querySelectorAll("[data-close-button]");
 const overlay = document.getElementById("modal-overlay")
-
 openModalButtons.forEach(button => {
     button.addEventListener("click", () => {
         const modal = document.querySelector(button.dataset.modalTarget)
-        console.log(modal)
         openModal(modal)
     })
 })
-
 overlay.addEventListener("click", () => {
     const modals = document.querySelectorAll(".modal.active")
     modals.forEach(modal => {
         closeModal(modal)
     })
 })
-
 closeModalButtons.forEach(button => {
     button.addEventListener("click", () => {
         const modal = button.closest(".modal")
         closeModal(modal)
     })
 })
-
 function openModal(modal) {
     if (modal == null) return
     modal.classList.add("active")
     overlay.classList.add("active")
 }
-
 function closeModal(modal) {
     if (modal == null) return
     modal.classList.remove("active")
     overlay.classList.remove("active")
 }
 
+/**
+ * Display the value of a slider on the label.
+ * @param {String} sliderID ID of the slider.
+ * @param {String} labelID ID of the label.
+ */
+function displayValue(sliderID, labelID) {
+    const slider = document.getElementById(sliderID)
+    const label = document.getElementById(labelID)
+    label.innerHTML = slider.value
+    slider.oninput = function() {
+        label.innerHTML = this.value;
+    }
+}
+displayValue("select-moveSpeed", "moveSpeedLabel")
+displayValue("select-rotSpeed", "rotSpeedLabel")
+
+/**
+ * Update the algorithm and values with respect to user's input.
+ */
+function saveSettings() {
+    const modal = document.getElementById("saveButton").closest(".modal")
+    if (document.getElementById("select-sat").checked) updateAlgo(0)
+    if (document.getElementById("select-diag").checked) updateAlgo(1)
+    moveSpeedDefault = document.getElementById("select-moveSpeed").value
+    rotationSpeedDefault = document.getElementById("select-rotSpeed").value
+    closeModal(modal)
+}
+
+/**
+ * Reset the settings displayed in the modal so they represent 
+ * current state (instead of previous, unsaved inputs).
+ */
+function resetSettings() {
+    switch (algo) {
+        case 0:
+            document.getElementById("select-sat").checked = true;
+            break;
+        case 1:
+            document.getElementById("select-diag").checked = true;
+            break;
+    }
+    document.getElementById("select-moveSpeed").value = moveSpeedDefault
+    document.getElementById("select-rotSpeed").value = rotationSpeedDefault
+}
+
 
 
 if (!window.requestAnimationFrame) {
-    window.requestAnimationFrame =
-        window.mozRequestAnimationFrame ||
-        window.webkitRequestAnimationFrame;
+    window.requestAnimationFrame = window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame;
 }
 
 window.onload = function() {
@@ -320,11 +358,12 @@ window.onload = function() {
     document.getElementById("inputSection-page2-btnRight").onpointerup = () => {right_alt = false;};
     document.getElementById("inputSection-page2-btnRight").onpointerout = () => {right_alt = false;};
     
-    canv.addEventListener('click', mouseClick);
+    canv.addEventListener("click", mouseClick);
 
     // Set global variables
-    rotationSpeedDefault = 4.5;     // Radians per second
-    moveSpeedDefault = 200;         // Pixels per second
+    saveSettings();
+    // rotationSpeedDefault = 260;     // Degrees per second
+    // moveSpeedDefault = 200;         // Pixels per second
     loaded = false;
 
     rotation = 0;
@@ -338,7 +377,7 @@ window.onload = function() {
     backward_alt = false;
     polys = [];
     spawnHeight = 130
-    updateAlgo(1);
+    updateAlgo(0);
 
     updateSize();
 
@@ -419,7 +458,7 @@ function updateMovementValues(now) {
     elapsedTime = (now - prevTime)/1000;
     prevTime = now;
     // let fps = 1/elapsedTime;
-    rotationSpeed = rotationSpeedDefault*elapsedTime;
+    rotationSpeed = rotationSpeedDefault*(Math.PI/180)*elapsedTime; // Convert to radians
     moveSpeed = moveSpeedDefault*elapsedTime;
     if (!isNaN(elapsedTime)) loaded = true;    // Flush first 2 cycles, is undefined
 }

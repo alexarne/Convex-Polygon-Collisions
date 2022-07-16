@@ -2,6 +2,7 @@
 
 * {
     font-family: 'Poppins';
+    outline: none;
 }
 
 html, body {
@@ -59,7 +60,6 @@ html, body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    outline: none;
 }
 
 #inputSection-page2-btnUp {
@@ -83,7 +83,6 @@ html, body {
     position: absolute;
     right: 15px;
     top: 15px;
-    outline: none;
 }
 
 #gridLayout {
@@ -167,7 +166,6 @@ html, body {
 #pushable {
     height: 30px;
     width: 30px;
-    outline: none;
 }
 
 #submit-container {
@@ -176,7 +174,6 @@ html, body {
 }
 
 #submit {
-    outline: none;
     width: 150px;
     height: 30px;
 }
@@ -192,7 +189,6 @@ html, body {
 #buttons > * {
     width: 2rem;
     height: 2rem;
-    outline: none;
 }
 
 #algoText-algo {
@@ -214,7 +210,7 @@ html, body {
     position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%) translate(0, 100px);
+    transform: translate(-50%, -50%) translate(0, 50px);
     border-radius: 10px;
     z-index: 10;
     background-color: whitesmoke;
@@ -231,29 +227,63 @@ html, body {
 }
 
 .modal-header {
-    padding: 10px 15px;
+    padding: 15px 15px;
     display: flex;
     justify-content: center;
 
 }
 
 .modal-header .modal-title {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
 }
 
 .modal-header .modal-closeButton {
     position: absolute;
-    right: 10px;
+    right: 15px;
     cursor: pointer;
     border: none;
-    outline: none;
     background: none;
     font-size: 1.25rem;
     font-weight: bold;
+    border-radius: 40px;
 }
 
-.modal-body {
+#modal-body-settings {
+    padding: 0px 15px;
+    max-height: calc(70vh - 100px);
+    overflow-y: scroll;
+}
+
+.modal-body-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+#modal-settings-saveButton {
+    text-align: center;
+    padding: 15px 15px;
+}
+
+#saveButton {
+    font-size: 1.25rem;
+    cursor: pointer;
+    border: none;
+    background-color: whitesmoke;
+    color: black;
+    border-radius: 400px;
+    padding: 0px 10px;
+    transition: 200ms ease-in-out;
+}
+
+#saveButton:hover {
+    background: black;
+    color: whitesmoke;
+}
+
+#modal-body-tutorial {
     padding: 10px 15px;
 }
 
@@ -275,8 +305,8 @@ html, body {
     pointer-events: all;
 }
 
-/* Credit: https://stackoverflow.com/a/4407335 */
-.noselect {
+/* No select, credit: https://stackoverflow.com/a/4407335 */
+* {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
        -khtml-user-select: none; /* Konqueror HTML */

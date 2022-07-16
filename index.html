@@ -13,7 +13,7 @@
     <canvas id="gc"></canvas>
     <img style="display:none" id="spawn" src="assets/spawn.png">
 
-    <div id="inputSection" class="noselect">
+    <div id="inputSection">
         <button id="changeInput">C</button>
         <div id="inputSection-page1">
             <div id="gridLayout">
@@ -44,11 +44,11 @@
         </div>
     </div>
 
-    <div id="buttons" class="noselect">
-        <button data-modal-target="#modal-help" id="help">
+    <div id="buttons">
+        <button data-modal-target="#modal-tutorial" id="tutorial">
             ?
         </button>
-        <button data-modal-target="#modal-settings" id="settings">
+        <button data-modal-target="#modal-settings" id="settings" onclick="resetSettings()">
             S
         </button>
     </div>
@@ -62,22 +62,41 @@
             <div class="modal-title">Settings</div>
             <button data-close-button class="modal-closeButton">&times;</button>
         </div>
-        <div class="modal-body">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta aut sint debitis voluptatum voluptates placeat ut vero neque recusandae praesentium. Corporis, culpa totam. Nam, sed? Quasi dignissimos ea aperiam nobis ab cum minima tempora quibusdam, iure mollitia quos dolores? Dignissimos et alias cupiditate consequatur laborum doloribus optio voluptatem facere omnis error quae rem suscipit ad sint, deleniti minima esse voluptatum dicta expedita vel ex nulla. Perspiciatis corporis eum ab hic doloremque dolor doloribus, autem veritatis modi quibusdam molestiae iste harum?
+        <div id="modal-body-settings">
+            <div id="modal-body-settings-algorithm">
+                <h1 class="modal-body-title">Algorithm</h1>
+                <input type="radio" name="algo" id="select-sat" checked>
+                <label for="select-sat">Separating Axis Theorem</label><br>
+                <input type="radio" name="algo" id="select-diag">
+                <label for="select-diag">Diagonals</label>
+            </div><br>
+            <div id="modal-body-settings-movement">
+                <h1 class="modal-body-title">Movement</h1>
+                <label for="moveSpeed">Velocity:</label>
+                <input type="range" name="moveSpeed" id="select-moveSpeed" min="50" max="350" value="200">
+                <label for="moveSpeed"><span id="moveSpeedLabel"></span> px per sec</label><br>
+                <label for="rotSpeed">Rotation:</label>
+                <input type="range" name="rotSpeed" id="select-rotSpeed" min="100" max="400" value="260">
+                <label for="moveSpeed"><span id="rotSpeedLabel"></span> deg per sec</label>
+            </div>
+            
+        </div>
+        <div id="modal-settings-saveButton">
+            <button id="saveButton" onclick="saveSettings()">Save</button>
         </div>
     </div>
 
-    <div class="modal" id="modal-help">
+    <div class="modal" id="modal-tutorial">
         <div class="modal-header">
-            <div class="modal-title">Help</div>
+            <div class="modal-title">Tutorial</div>
             <button data-close-button class="modal-closeButton">&times;</button>
         </div>
-        <div class="modal-body">
+        <div id="modal-body-tutorial">
             Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia ut sunt id porro, cupiditate voluptatem nesciunt, delectus quo molestias deserunt aliquid provident, libero qui. Libero perspiciatis fuga ratione dicta vitae!
         </div>
     </div>
 
-    <div id="modal-overlay"></div>
+    <div class="" id="modal-overlay"></div>
 
 </body>
 </html>
