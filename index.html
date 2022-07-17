@@ -45,7 +45,7 @@
     </div>
 
     <div id="buttons">
-        <button data-modal-target="#modal-tutorial" id="tutorial">
+        <button data-modal-target="#modal-tutorial" id="tutorial" onclick="resetPage()">
             ?
         </button>
         <button data-modal-target="#modal-settings" id="settings" onclick="resetSettings()">
@@ -72,12 +72,16 @@
             </div><br>
             <div id="modal-body-settings-movement">
                 <h1 class="modal-body-title">Movement</h1>
-                <label for="moveSpeed">Velocity:</label>
-                <input type="range" name="moveSpeed" id="select-moveSpeed" min="50" max="350" value="200">
-                <label for="moveSpeed"><span id="moveSpeedLabel"></span> px per sec</label><br>
-                <label for="rotSpeed">Rotation:</label>
-                <input type="range" name="rotSpeed" id="select-rotSpeed" min="100" max="400" value="260">
-                <label for="moveSpeed"><span id="rotSpeedLabel"></span> deg per sec</label>
+                <label for="moveSpeed">Velocity</label>
+                <div class="slider-container">
+                    <input class="slider" type="range" name="moveSpeed" id="select-moveSpeed" min="50" max="350" value="200">
+                </div>
+                <label for="moveSpeed"><span id="moveSpeedValue"></span> px per sec</label><br>
+                <label for="rotSpeed">Rotation</label>
+                <div class="slider-container">
+                    <input class="slider" type="range" name="rotSpeed" id="select-rotSpeed" min="100" max="400" value="260">
+                </div>
+                <label for="moveSpeed"><span id="rotSpeedValue"></span> deg per sec</label>
             </div>
             
         </div>
@@ -92,7 +96,29 @@
             <button data-close-button class="modal-closeButton">&times;</button>
         </div>
         <div id="modal-body-tutorial">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia ut sunt id porro, cupiditate voluptatem nesciunt, delectus quo molestias deserunt aliquid provident, libero qui. Libero perspiciatis fuga ratione dicta vitae!
+            <div id="modal-body-page1">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia ut sunt id porro, cupiditate voluptatem nesciunt, delectus quo molestias deserunt aliquid provident, libero qui. Libero perspiciatis fuga ratione dicta vitae!
+            </div>
+            <div id="modal-body-page2">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum dolores culpa mollitia maxime esse dicta inventore dolore eos. Distinctio aut modi commodi. Asperiores quos expedita in. Soluta odio quia, vel aliquam, pariatur molestiae nobis nemo neque illum laboriosam consectetur aperiam quas possimus consequuntur incidunt eum maxime, assumenda non? Quibusdam assumenda sunt nostrum eos non facilis qui quis tenetur quae quo, eius libero illo magnam totam incidunt animi aspernatur dignissimos officia necessitatibus ratione dicta? Repudiandae praesentium ratione rem dolore ut animi.
+            </div>
+            <div id="modal-body-page3">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam fugit labore libero eveniet maxime magni, incidunt assumenda aspernatur vero odit!
+            </div>
+            <div id="modal-body-page4">
+                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam tempora voluptatibus possimus non officiis nulla incidunt. Sapiente ducimus tempore omnis inventore odio itaque nam sit accusantium deserunt blanditiis officiis, repellendus tenetur voluptatibus numquam quia cupiditate quos deleniti laboriosam labore quis magni perferendis quo alias ex. Architecto porro ducimus eaque quibusdam?
+            </div>
+        </div>
+        <div id="modal-tutorial-footer">
+            <button data-close-button id="skipButton">Skip</button>
+            <div id="tutorial-pageButtons">
+                <div id="prevButton-container">
+                    <button class="buttonDisabled" id="prevButton" onclick="prevPage()"><</button>
+                </div>
+                <div id="nextButton-container">
+                    <button id="nextButton" onclick="nextPage()">></button>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -54,7 +54,7 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * **Chain Collisions**
 
-    One polygon may be pushed into another, causing a chain reaction. The solution is then that we have to redo our collision checks if a polygon was moved, which can be simplified to checking only if the moved polygon collides with any polygons. The initial implementation resulted in occasional stack overflows due to checking polygons back and forth infinitely many times. This is believed to have been caused by floating point imprecisions where, although a collision was resolved, it may be found that it still overlaps the other polygon in another iteration. Therefore, we displace the polygon by a little more than what has been calculated. Of course, this is not a scientific solution and stack overflows may still occur, but that has not happened during my own testing.
+    One polygon may be pushed into another, causing a chain reaction. The solution is then that we have to redo our collision checks if a polygon was moved, which can be simplified to checking only if the moved polygon collides with any polygons. The initial implementation resulted in occasional stack overflows due to checking polygons back and forth infinitely many times. This is believed to have been caused by floating point imprecisions where, although a collision was resolved, it may be found that it still overlaps the other polygon in another iteration. Therefore, we displace the polygon by a little more than what has been calculated.
 
 * **Stack Overflows**
 

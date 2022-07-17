@@ -295,11 +295,11 @@ function displayValue(sliderID, labelID) {
         label.innerHTML = this.value;
     }
 }
-displayValue("select-moveSpeed", "moveSpeedLabel")
-displayValue("select-rotSpeed", "rotSpeedLabel")
+displayValue("select-moveSpeed", "moveSpeedValue")
+displayValue("select-rotSpeed", "rotSpeedValue")
 
 /**
- * Update the algorithm and values with respect to user's input.
+ * Update the algorithm and movement values with respect to user's input.
  */
 function saveSettings() {
     const modal = document.getElementById("saveButton").closest(".modal")
@@ -325,6 +325,59 @@ function resetSettings() {
     }
     document.getElementById("select-moveSpeed").value = moveSpeedDefault
     document.getElementById("select-rotSpeed").value = rotationSpeedDefault
+    displayValue("select-moveSpeed", "moveSpeedValue")
+    displayValue("select-rotSpeed", "rotSpeedValue")
+}
+
+var page = 1;
+var previousPage = 1;
+var numPages = 4;
+/**
+ * Increment the tutorial page and update accordingly.
+ */
+function nextPage() {
+    previousPage = page
+    if (page < numPages) {
+        page++
+        displayPage()
+    } else {
+        closeModal(document.getElementById("nextButton").closest(".modal"))
+    }
+}
+
+/**
+ * Decrement the tutorial page and update accordingly.
+ */
+function prevPage() {
+    previousPage = page;
+    if (page > 0) page--
+    displayPage();
+}
+
+/**
+ * Update the tutorial page to display the current page.
+ */
+function displayPage() {
+    document.getElementById("modal-body-page"+previousPage).style.display = "none"
+    document.getElementById("modal-body-page"+page).style.display = "contents"
+    if (page == 1) {
+        document.getElementById("prevButton").classList.add("buttonDisabled")
+    } else {
+        document.getElementById("prevButton").classList.remove("buttonDisabled")
+        if (page == numPages) {
+            document.getElementById("nextButton").innerHTML = "F"
+        }
+    }
+}
+
+/**
+ * Reset the tutorial page back to page 1.
+ */
+function resetPage() {
+    previousPage = page;
+    page = 1;
+    document.getElementById("nextButton").innerHTML = ">"
+    displayPage();
 }
 
 
@@ -385,6 +438,9 @@ window.onload = function() {
     selected = 0;
 
     draw();
+    // setTimeout(() => {
+    //     openModal(document.getElementById("modal-tutorial"))
+    // }, 500);
 }
 
 // Global variables
