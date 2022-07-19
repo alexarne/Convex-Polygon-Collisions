@@ -365,7 +365,9 @@ function displayPage() {
     } else {
         document.getElementById("prevButton").classList.remove("buttonDisabled")
         if (page == numPages) {
-            document.getElementById("nextButton").innerHTML = "F"
+            document.getElementById("nextButton").innerHTML = "&#10003;"
+        } else {
+            document.getElementById("nextButton").innerHTML = ">";
         }
     }
 }
@@ -513,7 +515,7 @@ var prevTime
 function updateMovementValues(now) {
     elapsedTime = (now - prevTime)/1000;
     prevTime = now;
-    // let fps = 1/elapsedTime;
+    //console.log("fps: " + 1/elapsedTime);
     rotationSpeed = rotationSpeedDefault*(Math.PI/180)*elapsedTime; // Convert to radians
     moveSpeed = moveSpeedDefault*elapsedTime;
     if (!isNaN(elapsedTime)) loaded = true;    // Flush first 2 cycles, is undefined
