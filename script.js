@@ -365,9 +365,9 @@ function displayPage() {
     } else {
         document.getElementById("prevButton").classList.remove("buttonDisabled")
         if (page == numPages) {
-            document.getElementById("nextButton").innerHTML = "&#10003;"
+            document.getElementById("nextButton").classList.add("buttonHighlighted")
         } else {
-            document.getElementById("nextButton").innerHTML = ">";
+            document.getElementById("nextButton").classList.remove("buttonHighlighted")
         }
     }
 }
@@ -378,7 +378,8 @@ function displayPage() {
 function resetPage() {
     previousPage = page;
     page = 1;
-    document.getElementById("nextButton").innerHTML = ">"
+    document.getElementById("prevButton").classList.add("buttonDisabled")
+    document.getElementById("nextButton").classList.remove("buttonHighlighted")
     displayPage();
 }
 

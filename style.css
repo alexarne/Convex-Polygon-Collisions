@@ -276,27 +276,44 @@ html, body {
     margin-top: 0;
 }
 
-#saveButton, #skipButton, #prevButton, #nextButton {
+:root {
+    --button-color: #303030;
+    --disabled-color: #BBBBBB;
+    --highlighted-color: #34a730;
+}
+
+.button {
     font-size: 1.25rem;
     cursor: pointer;
     border: none;
-    background: #303030;
+    background: var(--button-color);
     color: whitesmoke;
     border-radius: 3px;
     transition: 200ms ease-in-out;
-    border: 1px solid #303030;
+    border: 1px solid var(--button-color);
     height: 32px;
 }
 
-#saveButton:hover, #skipButton:hover, #prevButton:hover, #nextButton:hover {
+.button:hover {
     background-color: whitesmoke;
-    color: #303030;
+    color: var(--button-color);
 }
 
 .buttonDisabled {
     background: #BBBBBB !important;
     border: 1px solid #BBBBBB !important;
     pointer-events: none !important;
+}
+
+.buttonHighlighted {
+    background: var(--highlighted-color) !important;
+    border: 1px solid var(--highlighted-color) !important;
+}
+
+.buttonHighlighted:hover {
+    color: var(--highlighted-color) !important;
+    background-color: whitesmoke !important;
+    border: 1px solid var(--highlighted-color) !important;
 }
 
 #modal-settings-saveButton {
@@ -315,7 +332,7 @@ html, body {
 }
 
 #modal-body-tutorial {
-    padding: 10px 15px;
+    padding: 0px 15px;
     height: 300px;
     overflow-y: scroll;
 }
