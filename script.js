@@ -341,7 +341,9 @@ function nextPage() {
         page++
         displayPage()
     } else {
-        closeModal(document.getElementById("nextButton").closest(".modal"))
+        let tutorialModal = document.getElementById("nextButton").closest(".modal")
+        if (tutorialModal.classList.contains("active")) 
+            closeModal(document.getElementById("nextButton").closest(".modal"))
     }
     console.log(page)
 }
