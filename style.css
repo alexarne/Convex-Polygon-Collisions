@@ -26,7 +26,7 @@ html, body {
     bottom: 10%;
     text-align: center;
     width: 220px;
-    height: auto;
+    height: 110px;
     background-color: whitesmoke;
     border-radius: 3px;
     padding: 20px;
@@ -35,22 +35,26 @@ html, body {
 
 #inputSection-page1 {
     width: 175px;
+    height: inherit;
     position: relative;
     left: 50%;
     transform: translate(-50%, 0);
 }
 
 #inputSection-page2 {
-    visibility: hidden;
     height: 110px;
     width: 175px;
-    position: absolute;
+    position: relative;
     left: 50%;
     transform: translate(-50%, 0);
     display: grid;
 	grid-template-rows: 50% 50%;
 	grid-template-columns: 33% 33% 33%;
-    top: 20px;
+}
+
+.hidden {
+    display: none !important;
+    height: 0 !important;
 }
 
 #inputSection-page2 > * {
@@ -91,11 +95,10 @@ html, body {
 }
 
 #sides-container {
-
 }
 
 #sides-label {
-    
+    font-size: 14px;
 }
 
 #sides-input {
@@ -156,7 +159,7 @@ html, body {
 }
 
 #pushable-label {
-
+    font-size: 14px;
 }
 
 #pushable-div {
@@ -164,16 +167,29 @@ html, body {
 }
 
 #pushable {
-    height: 30px;
-    width: 30px;
+    width: 32px;
+    height: 32px;
+    /* width: 1.3em;
+    height: 1.3em;
+    background-color: white;
+    border-radius: 50%;
+    vertical-align: middle;
+    border: 1px solid #ddd;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer; */
 }
 
 #submit-container {
-    margin-top: 20px;
-    
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 0);
 }
 
 #submit {
+    font-size: 14px;
     width: 150px;
     height: 30px;
 }

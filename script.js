@@ -55,13 +55,13 @@ function collision_SAT(p1, p2) {
     let d = [p1.x-p2.x, p1.y-p2.y];
     let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]);
     // Use margin to account for rounding errors
-    let margin = 1.5;
+    let margin = 0.5;
     if (p2.pushable) {
-        p2.x -= overlap * d[0] / s * margin;
-        p2.y -= overlap * d[1] / s * margin;
+        p2.x -= (overlap + margin) * d[0] / s;
+        p2.y -= (overlap + margin) * d[1] / s;
     } else {
-        p1.x += overlap * d[0] / s * margin;
-        p1.y += overlap * d[1] / s * margin;
+        p1.x += (overlap + margin) * d[0] / s;
+        p1.y += (overlap + margin) * d[1] / s;
     }
     return true;
 }
@@ -343,14 +343,17 @@ function nextPage() {
     } else {
         closeModal(document.getElementById("nextButton").closest(".modal"))
     }
+    console.log(page)
 }
 
 /**
  * Decrement the tutorial page and update accordingly.
  */
 function prevPage() {
-    previousPage = page;
-    if (page > 0) page--
+    if (page > 1) {
+        previousPage = page;
+        page--
+    }
     displayPage();
 }
 
@@ -656,6 +659,12 @@ function keyDown(evt) {
         case "D":
             right = true;
             break;
+        case String.fromCharCode(39):
+            nextPage();
+            break;
+        case String.fromCharCode(37):
+            prevPage();
+            break;
     }
 }
 
@@ -704,18 +713,11 @@ function mouseClick(evt) {
  * and movement controls).
  */
 function toggleInput() {
-    let page1_visible = getComputedStyle(document.getElementById("inputSection-page1")).visibility == "visible";
-    let visible;
-    let hidden;
-    if (page1_visible) {
-        visible = "inputSection-page2";
-        hidden = "inputSection-page1";
-    } else {
-        visible = "inputSection-page1";
-        hidden = "inputSection-page2";
-    }
-    document.getElementById(visible).style.visibility = "visible";
-    document.getElementById(hidden).style.visibility = "hidden";
+    let page1_visible = !document.getElementById("inputSection-page1").classList.contains("hidden");
+    let visible = "inputSection-page" + (page1_visible ? "2" : "1");
+    let hidden = "inputSection-page" + (page1_visible ? "1" : "2");
+    document.getElementById(visible).classList.remove("hidden");
+    document.getElementById(hidden).classList.add("hidden");
 }
 
 /**
