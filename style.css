@@ -5,13 +5,21 @@
     outline: none;
 }
 
+:root {
+    --background-color: #181818;
+    --foreground-color: whitesmoke;
+    --button-color: #303030;
+    --disabled-color: #BBBBBB;
+    --highlighted-color: #34a730;
+}
+
 html, body {
     width: 100%;
     height: 100%;
     margin: 0;
     border: 0;
     padding: 0;
-    background-color: #181818;
+    background-color: var(--background-color);
 }
 
 #gc {
@@ -27,7 +35,7 @@ html, body {
     text-align: center;
     width: 220px;
     height: 110px;
-    background-color: whitesmoke;
+    background-color: var(--foreground-color);
     border-radius: 3px;
     padding: 20px;
     transform: translate(-50%, 0);
@@ -71,18 +79,6 @@ html, body {
     grid-column-end: 4;
 }
 
-#inputSection-page2-btnDown {
-    
-}
-
-#inputSection-page2-btnLeft {
-    
-}
-
-#inputSection-page2-btnRight {
-    
-}
-
 #changeInput {
     position: absolute;
     right: 15px;
@@ -92,9 +88,6 @@ html, body {
 #gridLayout {
     display: grid;
     grid-template-columns: 50% 50%;
-}
-
-#sides-container {
 }
 
 #sides-label {
@@ -107,38 +100,54 @@ html, body {
     text-align: center;
     left: 50%;
     transform: translate(-50%, 0);
-    width: 60px;
+    width: 30px;
     height: 30px;
     border-radius: 40px;
-    border: 1.5px solid black;
+    border: 2px solid var(--button-color);
+    transition: 500ms;
+}
+
+#sides-input #sides-next, #sides-input #sides-prev {
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-top: 2px solid var(--button-color);
+    border-left: 2px solid var(--button-color);
+    z-index: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: 300ms ease-out;
+    pointer-events: none;
 }
 
 #sides-input #sides-next {
-    position: absolute;
-    top: 50%;
     right: 10px;
-    display: block;
-    width: 6px;
-    height: 6px;
-    border-top: 1.5px solid black;
-    border-left: 1.5px solid black;
-    z-index: 1;
     transform: translateY(-50%) rotate(135deg);
-    cursor: pointer;
 }
 
 #sides-input #sides-prev {
-    position: absolute;
-    top: 50%;
     left: 10px;
-    display: block;
-    width: 6px;
-    height: 6px;
-    border-top: 1.5px solid black;
-    border-left: 1.5px solid black;
-    z-index: 1;
     transform: translateY(-50%) rotate(315deg);
-    cursor: pointer;
+}
+
+#sides-input:hover {
+    width: 60px;
+}
+
+@keyframes delay-pointer-events {
+    0% { visibility: hidden; }
+    1% { visibility: hidden; }
+    100% { visibility: visible; }
+}
+
+#sides-input:hover #sides-next, #sides-input:hover #sides-prev {
+    animation: delay-pointer-events 200ms linear;
+    opacity: 1;
+    transition: 400ms ease-out;
+    transition-delay: 100ms;
+    pointer-events: all;
 }
 
 #sides-value {
@@ -148,27 +157,62 @@ html, body {
     height: 100%;
     text-align: center;
     line-height: 30px;
-    color: black;
+    color: var(--button-color);
     font-size: 18px;
     font-weight: 1;
     user-select: none;
 }
 
-#pushable-container {
-    
-}
-
 #pushable-label {
     font-size: 14px;
+    position: relative;
+    top: -2px;
+}
+
+#pushable-label::before {
+    content: "";
+    background: url("assets/check-circle.svg");
+    filter: brightness(0%);
+    background-position: center;
+    background-size: contain;
+    width: 36px;
+    height: 36px;
+    position: absolute;
+    left: 14px;
+    top: 25px;
+    transform: scale(0) rotateZ(180deg);
+    transition: all 400ms ease-in-out;
+}
+
+#pushable:checked + #pushable-label::before {
+    transform: scale(1) rotateZ(0deg);
+    transition: all 400ms cubic-bezier(0.54, 0.01, 0, 1.49);
+}
+
+#pushable-label::after {
+    box-sizing: border-box;
+    content: "";
+    border: 2px solid var(--button-color);
+    width: 34px;
+    height: 34px;
+    position: absolute;
+    left: 15px;
+    top: 26px;
+    border-radius: 50%;
 }
 
 #pushable-div {
-    margin-top: 5px;
+    margin-top: 2px;
 }
 
 #pushable {
-    width: 32px;
-    height: 32px;
+    /* margin: 3px;
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid black;
+    appearance: none;
+    box-sizing: content-box; */
+    display: none;
     /* width: 1.3em;
     height: 1.3em;
     background-color: white;
@@ -290,12 +334,6 @@ html, body {
     font-weight: bold;
     margin-bottom: 0.5rem;
     margin-top: 0;
-}
-
-:root {
-    --button-color: #303030;
-    --disabled-color: #BBBBBB;
-    --highlighted-color: #34a730;
 }
 
 .button {

@@ -107,15 +107,15 @@ function collision_DIAG(p1, p2) {
     let collided = false;
     let points1 = p1.getPoints();
     let points2 = p2.getPoints();
-    let poly1 = p2;
-
+    let poly1 = p1;
+    
     // Edge case if the points are exactly identical (two identical polygons spawned in a row)
     if (samePoints(points1, points2)) return true;
     
-    // Test all sides of p1, then all sides of p2
+    // Test all diagonals of p1, then all diagonals of p2
     for (let shape = 0; shape < 2; shape++) {
         if (shape == 1) {
-            poly1 = p1;
+            poly1 = p2;
             points1 = p2.getPoints();
             points2 = p1.getPoints();
         }
@@ -123,13 +123,13 @@ function collision_DIAG(p1, p2) {
         let displacement = [0, 0];
         let intersections = 0;
         // Check diagonals of polygon...
-        for (let p = 0; p < points2.length; p++) {
+        for (let p = 0; p < points1.length; p++) {
             let line_r1s = [spawnX + poly1.x, spawnY + poly1.y];
-            let line_r1e = points2[p];
+            let line_r1e = points1[p];
             // ...against edges of the other
-            for (let q = 0; q < points1.length; q++) {
-                let line_r2e = points1[q];
-                let line_r2s = points1[(q+1) % points1.length];
+            for (let q = 0; q < points2.length; q++) {
+                let line_r2s = points2[q];
+                let line_r2e = points2[(q+1) % points2.length];
                 // Line segment intersection
                 let h = (line_r2e[0]-line_r2s[0])*(line_r1s[1]-line_r1e[1]) - (line_r1s[0]-line_r1e[0])*(line_r2e[1]-line_r2s[1]);
                 let t1 = ((line_r2s[1]-line_r2e[1])*(line_r1s[0]-line_r2s[0]) + (line_r2e[0]-line_r2s[0])*(line_r1s[1]-line_r2s[1])) / h;
@@ -149,11 +149,11 @@ function collision_DIAG(p1, p2) {
             displacement[0] /= intersections;
             displacement[1] /= intersections;
             if (p2.pushable) {
-                p2.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
-                p2.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
+                p2.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
+                p2.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
             } else {
-                p1.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
-                p1.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
+                p1.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
+                p1.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
             }
         }
     }
@@ -172,8 +172,8 @@ function samePoints(points1, points2) {
     if (points1.length == 0) return true;
 
     // Sort to check points in increasing y-direction
-    let sorted1 = points1.sort((a, b) => {return a[1] - b[1]});
-    let sorted2 = points2.sort((a, b) => {return a[1] - b[1]});
+    let sorted1 = [...points1].sort((a, b) => {return a[1] - b[1]});
+    let sorted2 = [...points2].sort((a, b) => {return a[1] - b[1]});
     // Sort to check points in increasing x-direction
     sorted1 = sorted1.sort((a, b) => {return a[0] - b[0]});
     sorted2 = sorted2.sort((a, b) => {return a[0] - b[0]});
@@ -345,7 +345,6 @@ function nextPage() {
         if (tutorialModal.classList.contains("active")) 
             closeModal(document.getElementById("nextButton").closest(".modal"))
     }
-    console.log(page)
 }
 
 /**
@@ -483,6 +482,8 @@ var backward_alt;
 var right_alt;
 var left_alt;
 
+var hasMoved;
+
 /**
  * Draw a frame of the current state on the canvas and update state. 
  * @param {Number} now Time since starting the window (ms).
@@ -493,16 +494,18 @@ function draw(now) {
     drawSpawn();
     
     updateMovementValues(now);
+    hasMoved = false
     if (loaded) updatePolygon();
 
-    // Treat selected polygon as pushable
-    checks = 0;
-    let pBefore = polys[selected].pushable;
-    polys[selected].pushable = true;
-    resolve_collisions(selected);
-    polys[selected].pushable = pBefore;
+    if (hasMoved) {
+        // Treat selected polygon as pushable
+        checks = 0;
+        let pBefore = polys[selected].pushable;
+        polys[selected].pushable = true;
+        resolve_collisions(selected);
+        polys[selected].pushable = pBefore;
+    }
 
-    if (!loaded) polys[selected].blink();
     // Draw all polygons, with selected polygon on top
     polys.forEach((element, index) => {
         if (index != selected) element.draw(false);
@@ -624,7 +627,7 @@ function addPolygon() {
     // Check if new polygon collides with other polygons and if so, highlight them and delete the created polygon
     let collided = false;
     for (let i = 0; i < newPlace; i++) {
-        if (collision(i, newPlace)) {
+        if (collision(i, newPlace)) {   // Push only the new polygon so the rest remain unchanged
             polys[i].blink();
             collided = true;
             polys[newPlace] = new Polygon(sides, true);     // Tacky solution; respawn since it could've been moved
@@ -661,11 +664,17 @@ function keyDown(evt) {
         case "D":
             right = true;
             break;
-        case String.fromCharCode(39):
+        case "P":
+            polys[selected].pushable = !polys[selected].pushable;
+            break;
+        case String.fromCharCode(39):   // Right arrow
             nextPage();
             break;
-        case String.fromCharCode(37):
+        case String.fromCharCode(37):   // Left arrow
             prevPage();
+            break;
+        case String.fromCharCode(27):   // ESC
+            document.querySelectorAll(".modal.active").forEach((e) => {closeModal(e)})
             break;
     }
 }
@@ -745,7 +754,6 @@ class Polygon {
         this.y = 0;
         this.r = 50;
         this.rot = 0;
-        this.c = pushable ? "#A0A0A0" : "#505050";
         this.sides = sides;
         this.pushable = pushable;
         
@@ -770,7 +778,7 @@ class Polygon {
      * @param {Boolean} selected If this polygon is currently selected.
      */
     draw(selected) {
-        let color = this.c;
+        let color = this.pushable ? "#A0A0A0" : "#505050";
         if (this.blinkTimer > 0) {
             this.blinkTimer -= elapsedTime;
             if (this.blinkTimer % this.cycle <= this.blinkOn) {
@@ -811,7 +819,7 @@ class Polygon {
         const arr = [];
         let offset = this.sides % 2 == 0 ? Math.PI/this.sides : 0;
         arr[0] = [spawnX+this.x+this.r*Math.cos(Math.PI/2-this.rot+offset), spawnY+this.y-this.r*Math.sin(Math.PI/2-this.rot+offset)];
-
+        
         for (let i = 1; i < this.sides; i++) {
             arr[i] = [spawnX+this.x+this.r*Math.cos(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset), spawnY+this.y-this.r*Math.sin(Math.PI/2-this.rot+i*2*Math.PI/this.sides+offset)];
         }
@@ -823,6 +831,7 @@ class Polygon {
      */
     turnRight() {
         this.rot += rotationSpeed;
+        hasMoved = true;
     }
 
     /**
@@ -830,6 +839,7 @@ class Polygon {
      */
     turnLeft() {
         this.rot -= rotationSpeed;
+        hasMoved = true;
     }
 
     /**
@@ -838,6 +848,7 @@ class Polygon {
     moveForwards() {
         this.x += moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y -= moveSpeed*Math.sin(Math.PI/2-this.rot);
+        hasMoved = true;
     }
 
     /**
@@ -846,6 +857,7 @@ class Polygon {
     moveBackwards() {
         this.x -= moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y += moveSpeed*Math.sin(Math.PI/2-this.rot);
+        hasMoved = true;
     }
 }
 
