@@ -82,7 +82,7 @@
                     <input class="slider" type="range" name="rotSpeed" id="select-rotSpeed" min="100" max="400" value="260">
                 </div>
                 <label for="moveSpeed"><span id="rotSpeedValue"></span> deg per sec</label>
-            </div>
+            </div><br>
         </div>
         <div id="modal-settings-saveButton">
             <button id="saveButton" class="button" onclick="saveSettings()">Save</button>
@@ -95,28 +95,53 @@
             <button data-close-button class="modal-closeButton">&times;</button>
         </div>
         <div id="modal-body-tutorial">
-            <div id="modal-body-page1">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia ut sunt id porro, cupiditate voluptatem nesciunt, delectus quo molestias deserunt aliquid provident, libero qui. Libero perspiciatis fuga ratione dicta vitae!
+            <div id="tutorial-page1">
+                <h1>Welcome to Convex Polygon Collisions</h1>
+                <h2>This demonstration seeks to showcase the behaviours of two algorithms; Separating Axis Theorem and Diagonals.</h2>
+                <h2>If you want to skip the tutorial, click the "Skip" button below. Otherwise, click on the buttons in the bottom right or use the arrow keys on your keyboard.</h2>
+                <!-- image of two polygons colliding and creating sparks, same but cropped from github repo -->
             </div>
-            <div id="modal-body-page2">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum dolores culpa mollitia maxime esse dicta inventore dolore eos. Distinctio aut modi commodi. Asperiores quos expedita in. Soluta odio quia, vel aliquam, pariatur molestiae nobis nemo neque illum laboriosam consectetur aperiam quas possimus consequuntur incidunt eum maxime, assumenda non? Quibusdam assumenda sunt nostrum eos non facilis qui quis tenetur quae quo, eius libero illo magnam totam incidunt animi aspernatur dignissimos officia necessitatibus ratione dicta? Repudiandae praesentium ratione rem dolore ut animi.
+            <div id="tutorial-page2">
+                <h1>Controlling the Polygons</h1>
+                <h2>The purpose is to create multiple polygons in order to drive them into each other and observe how the collisions are handled.</h2>
+                <h2>You can move the selected polygon by pressing W, A, S, or D on your keyboard.</h2>
+                <!-- image of wasd keys -->
             </div>
-            <div id="modal-body-page3">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ullam fugit labore libero eveniet maxime magni, incidunt assumenda aspernatur vero odit!
+            <div id="tutorial-page3">
+                <h1>Creating Polygons</h1>
+                <h2>Create a new polygon by inputting its amount of sides and choosing if it should be pushable before clicking "Create Polygon".</h2>
+                <h2>The values on the input section are used when creating new polygons, not to modify existing polygons.</h2>
+                <h2>Click on a polygon to select it.</h2>
+                <h2>If existing polygons would collide with the new polygon, those polygons will blink red and no new polygon is created.</h2>
+                <!-- image of polygon being red and a dashed outline of the polygon that was attempted to be spawned -->
             </div>
-            <div id="modal-body-page4">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Veniam tempora voluptatibus possimus non officiis nulla incidunt. Sapiente ducimus tempore omnis inventore odio itaque nam sit accusantium deserunt blanditiis officiis, repellendus tenetur voluptatibus numquam quia cupiditate quos deleniti laboriosam labore quis magni perferendis quo alias ex. Architecto porro ducimus eaque quibusdam?
+            <div id="tutorial-page4">
+                <h1>Configure Your Experience</h1>
+                <h2>Choose which algorithm should be used by opening the settings.</h2>
+                <h2>You may also change the movement speed and rotation speed of the polygons.</h2>
+                <h2>Keep in mind that unless you save the settings, they will be discarded.</h2>
+                <!-- image of mouse clicking on the settings button -->
+            </div>
+            <div id="tutorial-page5">
+                <h1>Additional Controls</h1>
+                <h2>Change whether or not the selected polygon should be pushable by pressing P on your keyboard.</h2>
+                <h2>Close a pop-up (like this one) by clicking outside it or by pressing ESC.</h2>
+                <h2>Save the settings by pressig ENTER.</h2>
+            </div>
+            <!-- <div id="tutorial-page3">
+                <h1>The Algorithms Only Work on Convex Polygons</h1>
+                <h2>Convex polygons are polygons where all internal angles are less than or equal to 180&deg;. This may be seen as a limitation, but since every concave polygon is made up of convex polygons, the algorithms can still be applied to concave polygons.</h2>
+            </div> -->
+            <div id="tutorial-page6">
+                <h1>That's It!</h1>
+                <h2>For the source code and more information regarding the algorithms and this project, visit <a href="https://github.com/alexarne/Convex-Polygon-Collisions">my GitHub</a>.</h2>
             </div>
         </div>
         <div id="modal-tutorial-footer">
             <button data-close-button id="skipButton" class="button">Skip</button>
             <div id="tutorial-pageButtons">
-                <div id="prevButton-container">
-                    <button id="prevButton" class="button" onclick="prevPage()"><</button>
-                </div>
-                <div id="nextButton-container">
-                    <button id="nextButton" class="button" onclick="nextPage()">></button>
-                </div>
+                <button id="prevButton" class="button" onclick="prevPage()"><</button>
+                <button id="nextButton" class="button" onclick="nextPage()">></button>
             </div>
         </div>
     </div>

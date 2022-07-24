@@ -1,6 +1,9 @@
 
 /* ======================= MAIN ALGORITHMS ======================= */
 
+// Use margin to account for rounding errors (extra pixels)
+var margin = 0.5;
+
 /**
  * Check if two polygons collide with each other by using the Separated
  * Axis Theorem. For each edge of either polygon, project all points onto
@@ -45,17 +48,11 @@ function collision_SAT(p1, p2) {
             if (max2 < min1 || max1 < min2) return false;
             
             let currentOverlap = Math.min(max1, max2) - Math.max(min1, min2);
-            if (isNaN(overlap)) {
-                overlap = currentOverlap;
-            } else {
-                overlap = Math.min(currentOverlap, overlap);
-            }
+            overlap = isNaN(overlap) ? currentOverlap : overlap = Math.min(currentOverlap, overlap);
         }
     }
     let d = [p1.x-p2.x, p1.y-p2.y];
     let s = Math.sqrt(d[0]*d[0]+d[1]*d[1]);
-    // Use margin to account for rounding errors
-    let margin = 0.5;
     if (p2.pushable) {
         p2.x -= (overlap + margin) * d[0] / s;
         p2.y -= (overlap + margin) * d[1] / s;
@@ -144,16 +141,16 @@ function collision_DIAG(p1, p2) {
         }
         // Update polygon last
         if (intersections != 0) {
-            // Use margin to account for rounding errors
-            let margin = 1.000001;
+            let d = Math.sqrt(displacement[0]*displacement[0]+displacement[1]*displacement[1]);
+            let unitVec = [displacement[0]/d, displacement[1]/d];
             displacement[0] /= intersections;
             displacement[1] /= intersections;
             if (p2.pushable) {
-                p2.x += displacement[0] * (shape == 0 ? +1 : -1) * margin;
-                p2.y += displacement[1] * (shape == 0 ? +1 : -1) * margin;
+                p2.x += (displacement[0]+unitVec[0]*margin) * (shape == 0 ? +1 : -1);
+                p2.y += (displacement[1]+unitVec[1]*margin) * (shape == 0 ? +1 : -1);
             } else {
-                p1.x += displacement[0] * (shape == 0 ? -1 : +1) * margin;
-                p1.y += displacement[1] * (shape == 0 ? -1 : +1) * margin;
+                p1.x += (displacement[0]+unitVec[0]*margin) * (shape == 0 ? -1 : +1);
+                p1.y += (displacement[1]+unitVec[1]*margin) * (shape == 0 ? -1 : +1);
             }
         }
     }
@@ -171,7 +168,7 @@ function samePoints(points1, points2) {
     if (points1.length != points2.length) return false;
     if (points1.length == 0) return true;
 
-    // Sort to check points in increasing y-direction
+    // Sort to check points in increasing y-direction, use shallow copy
     let sorted1 = [...points1].sort((a, b) => {return a[1] - b[1]});
     let sorted2 = [...points2].sort((a, b) => {return a[1] - b[1]});
     // Sort to check points in increasing x-direction
@@ -196,6 +193,7 @@ function samePoints(points1, points2) {
 function resolve_collisions(poly) {
     if (checks++ > polys.length*10) {
         console.log("STACK OVERFLOW");
+        polys = copyPolys(prevPolys);     // Revert
         return;
     }
     for (let i = 0; i < polys.length; i++) {
@@ -302,7 +300,7 @@ displayValue("select-rotSpeed", "rotSpeedValue")
  * Update the algorithm and movement values with respect to user's input.
  */
 function saveSettings() {
-    const modal = document.getElementById("saveButton").closest(".modal")
+    const modal = document.getElementById("modal-settings")
     if (document.getElementById("select-sat").checked) updateAlgo(0)
     if (document.getElementById("select-diag").checked) updateAlgo(1)
     moveSpeedDefault = document.getElementById("select-moveSpeed").value
@@ -331,7 +329,7 @@ function resetSettings() {
 
 var page = 1;
 var previousPage = 1;
-var numPages = 4;
+var numPages = document.getElementById("modal-body-tutorial").children.length;
 /**
  * Increment the tutorial page and update accordingly.
  */
@@ -362,8 +360,8 @@ function prevPage() {
  * Update the tutorial page to display the current page.
  */
 function displayPage() {
-    document.getElementById("modal-body-page"+previousPage).style.display = "none"
-    document.getElementById("modal-body-page"+page).style.display = "contents"
+    document.getElementById("tutorial-page"+previousPage).style.display = "none"
+    document.getElementById("tutorial-page"+page).style.display = "contents"
     if (page == 1) {
         document.getElementById("prevButton").classList.add("buttonDisabled")
     } else {
@@ -483,6 +481,7 @@ var right_alt;
 var left_alt;
 
 var hasMoved;
+var prevPolys;
 
 /**
  * Draw a frame of the current state on the canvas and update state. 
@@ -495,6 +494,7 @@ function draw(now) {
     
     updateMovementValues(now);
     hasMoved = false
+    prevPolys = copyPolys(polys);
     if (loaded) updatePolygon();
 
     if (hasMoved) {
@@ -511,6 +511,19 @@ function draw(now) {
         if (index != selected) element.draw(false);
     });
     polys[selected].draw(true);
+}
+
+/**
+ * Create a copy of an array of polygons.
+ * @param {Array} ref Array of polygons to copy.
+ * @returns A true copy of the polygon array.
+ */
+function copyPolys(ref) {
+    let res = []
+    for (let i = 0; i < ref.length; i++) {
+        res[i] = ref[i].copy();
+    }
+    return res
 }
 
 var prevTime
@@ -667,14 +680,18 @@ function keyDown(evt) {
         case "P":
             polys[selected].pushable = !polys[selected].pushable;
             break;
-        case String.fromCharCode(39):   // Right arrow
-            nextPage();
+        case String.fromCharCode(13):   // ENTER
+            evt.preventDefault();       // Block previous button from being pressed
+            if (document.getElementById("modal-settings").classList.contains("active")) saveSettings();
+            break;
+        case String.fromCharCode(27):   // ESC
+            document.querySelectorAll(".modal.active").forEach((e) => {closeModal(e)})
             break;
         case String.fromCharCode(37):   // Left arrow
             prevPage();
             break;
-        case String.fromCharCode(27):   // ESC
-            document.querySelectorAll(".modal.active").forEach((e) => {closeModal(e)})
+        case String.fromCharCode(39):   // Right arrow
+            nextPage();
             break;
     }
 }
@@ -739,7 +756,6 @@ class Polygon {
     y;
     r;
     rot;
-    c;
     sides;
     pushable;
 
@@ -858,6 +874,24 @@ class Polygon {
         this.x -= moveSpeed*Math.cos(Math.PI/2-this.rot);
         this.y += moveSpeed*Math.sin(Math.PI/2-this.rot);
         hasMoved = true;
+    }
+
+    /**
+     * Create a copy of the polygon.
+     * @returns A new polygon with the same values.
+     */
+    copy() {
+        let res = new Polygon(this.sides, this.pushable)
+        res.x = this.x;
+        res.y = this.y;
+        res.r = this.r;
+        res.rot = this.rot;
+        res.blinkOn = this.blinkOn;
+        res.blinkOff = this.blinkOff;
+        res.blinks = this.blinks;
+        res.cycle = this.cycle;
+        res.blinkTimer = this.blinkTimer;
+        return res
     }
 }
 
