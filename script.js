@@ -305,9 +305,9 @@ function initSettings() {
     let moveSpeed = parseInt(localStorage.getItem("moveSpeed"))
     let rotSpeed = parseInt(localStorage.getItem("rotSpeed"))
     let algorithm = parseInt(localStorage.getItem("algorithm"))
-    if (moveSpeed == null) moveSpeed = 200      // Pixels per second
-    if (rotSpeed == null) rotSpeed = 260        // Degrees per second
-    if (algorithm == null) algorithm = 0
+    if (isNaN(moveSpeed)) moveSpeed = 200      // Pixels per second
+    if (isNaN(rotSpeed)) rotSpeed = 260        // Degrees per second
+    if (isNaN(algorithm)) algorithm = 0
     moveSpeedDefault = moveSpeed
     rotationSpeedDefault = rotSpeed
     updateAlgo(algorithm)
@@ -464,16 +464,12 @@ window.onload = function() {
 
     draw();
 
-    // Show tutorial on first visit, with no transition
+    // Show tutorial on first visit, disable transitions on all elements
     if (localStorage.getItem("firstVisit") != "false") {
-        let tutorialModal = document.getElementById("modal-tutorial");
-        tutorialModal.classList.add("notransition")
-        overlay.classList.add("notransition")
-        openModal(tutorialModal)
-        tutorialModal.offsetHeight
-        overlay.offsetHeight
-        tutorialModal.classList.remove("notransition")
-        overlay.classList.remove("notransition")
+        let elements = document.querySelectorAll("*")
+        elements.forEach((e) => {e.classList.add("notransition")})
+        openModal(document.getElementById("modal-tutorial"))
+        elements.forEach((e) => {e.offsetHeight; e.classList.remove("notransition");})
     }
 }
 
