@@ -13,8 +13,22 @@
     <canvas id="gc"></canvas>
     <img style="display:none" id="spawn" src="assets/spawn.png">
 
+    <div id="algoText">
+        <h1 id="algoText-algo"></h1>
+    </div>
+    <div id="buttons">
+        <button data-modal-target="#modal-settings" id="settings" class="button" onclick="resetSettings()">
+            <img class="icon" id="settings-icon" src="assets/gear.svg"/>
+        </button>
+        <button data-modal-target="#modal-tutorial" id="tutorial" class="button" onclick="resetPage()">
+            <img class="icon" id="tutorial-icon" src="assets/tutorial.svg">
+        </button>
+    </div>
+
     <div id="inputSection">
-        <button id="changeInput">C</button>
+        <button id="changeInput" onclick="toggleInput()">
+            <img id="toggle-icon" src="assets/toggle.svg">
+        </button>
         <div id="inputSection-page1">
             <div id="gridLayout">
                 <div id="sides-container">
@@ -43,19 +57,6 @@
             <button id="inputSection-page2-btnDown">V</button>
             <button id="inputSection-page2-btnRight">></button>
         </div>
-    </div>
-
-    <div id="buttons">
-        <button data-modal-target="#modal-settings" id="settings" class="button" onclick="resetSettings()">
-            <img class="icon" id="settings-icon" src="assets/gear.svg"/>
-        </button>
-        <button data-modal-target="#modal-tutorial" id="tutorial" class="button" onclick="resetPage()">
-            <img class="icon" id="tutorial-icon" src="assets/tutorial.svg">
-        </button>
-    </div>
-
-    <div id="algoText">
-        <h1 id="algoText-algo"></h1>
     </div>
 
     <div class="modal" id="modal-settings">
@@ -136,6 +137,7 @@
             </div> -->
             <div id="tutorial-page6">
                 <h1>That's It!</h1>
+                <h2>I hope you will enjoy this project as much as I did making it!</h2>
                 <h2>For the source code and more information regarding the algorithms and this project, visit <a href="https://github.com/alexarne/Convex-Polygon-Collisions">my GitHub</a>.</h2>
             </div>
         </div>

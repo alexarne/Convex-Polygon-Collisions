@@ -429,7 +429,6 @@ window.onload = function() {
 
     document.getElementById("sides-next").addEventListener("click", incrSides);
     document.getElementById("sides-prev").addEventListener("click", decrSides);
-    document.getElementById("changeInput").addEventListener("click", toggleInput);
 
     // Clickable controls
     document.getElementById("inputSection-page2-btnUp").onpointerdown = () => {forward_alt = true;};
@@ -787,6 +786,7 @@ function toggleInput() {
     let hidden = "inputSection-page" + (page1_visible ? "1" : "2");
     document.getElementById(visible).classList.remove("hidden");
     document.getElementById(hidden).classList.add("hidden");
+    document.getElementById("changeInput").classList.toggle("pressed")
 }
 
 /**
