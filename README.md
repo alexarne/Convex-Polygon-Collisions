@@ -8,10 +8,6 @@ https://alexarne.github.io/Convex-Polygon-Collisions/
 
 [YouTube video showcasing most of the features](link)
 
-## Code Overview
-
-A general overview of the code structure and what each file does is found in the [scripts folder's README file](./scripts/).
-
 ## Instructions
 
 The following information can also be accessed by clicking on the "Help" button in the top-right corner:
@@ -28,10 +24,6 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * The user can select another polygon by clicking on it
 
-## Known Bugs
-
-* During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, the action will be reverted, and print it to the console.
-
 ## TODOs
 
 * Finalize README by linking to code section of algorithm
@@ -40,11 +32,15 @@ The following information can also be accessed by clicking on the "Help" button 
 
     * Add video demonstration of the website
 
-* Add Reset Values button to settings (red color)
-
 * Make all elements (input section, top-right buttons, modal sizes, canvas?, font sizes) resize to different resolutions
 
 * Add images to this README and the tutorial modal
+
+* Style settings modal
+
+## Code Overview
+
+A general overview of the code structure and what each file does is found in the [scripts folder's README file](./scripts/).
 
 ## Algorithm Implementations
 
@@ -81,6 +77,10 @@ The following information can also be accessed by clicking on the "Help" button 
 * **Multiple Collision Points**
 
     If there were multiple contact points in a collision, the "Diagonals" algorithm would not respect that and would instead introduce noise in the resolution, resulting in movement from side to side in a perfect edge-to-edge collision. To solve that, we now use the updated points after displacement within the algorithm instead of only using the points for the polygons at the time of starting the algorithm (therefore; respecting any displacements which occur within the algorithm, before finishing). Another issue was that the displacement vectors (resolutions) would add up and result in a displacement value that was too high, due to improver vector additions. By respecting the amount of vectors added, we can reduce the displacement value by a factor of that amount. 
+
+## Known Bugs
+
+* During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, the action will be reverted, and print it to the console.
 
 ## Final Words
 

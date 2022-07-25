@@ -294,8 +294,6 @@ function displayValue(sliderID, labelID) {
         label.innerHTML = this.value;
     }
 }
-displayValue("select-moveSpeed", "moveSpeedValue")
-displayValue("select-rotSpeed", "rotSpeedValue")
 
 /**
  * Updates the settings values to match those stored in localStorage or default.
@@ -332,8 +330,8 @@ function saveSettings() {
 }
 
 /**
- * Reset the settings displayed in the modal so they represent 
- * current state (instead of previous, unsaved inputs).
+ * Reset the settings displayed in the modal so they represent current state 
+ * (instead of previous, unsaved inputs), fired when opening settings.
  */
 function resetSettings() {
     switch (algo) {
@@ -346,6 +344,14 @@ function resetSettings() {
     }
     document.getElementById("select-moveSpeed").value = moveSpeedDefault
     document.getElementById("select-rotSpeed").value = rotationSpeedDefault
+    displayValue("select-moveSpeed", "moveSpeedValue")
+    displayValue("select-rotSpeed", "rotSpeedValue")
+}
+
+function defaultSettings() {
+    document.getElementById("select-sat").checked = true;
+    document.getElementById("select-moveSpeed").value = 200
+    document.getElementById("select-rotSpeed").value = 260
     displayValue("select-moveSpeed", "moveSpeedValue")
     displayValue("select-rotSpeed", "rotSpeedValue")
 }
@@ -466,6 +472,16 @@ window.onload = function() {
 
     // Show tutorial on first visit, disable transitions on all elements
     if (localStorage.getItem("firstVisit") != "false") {
+        // // More logical, only touch conerned elements, doesnt always work (?)
+        // document.getElementById("modal-tutorial").classList.add("notransition")
+        // overlay.classList.add("notransition")
+        // openModal(document.getElementById("modal-tutorial"))
+        // document.getElementById("modal-tutorial").offsetHeight
+        // overlay.offsetHeight
+        // document.getElementById("modal-tutorial").classList.remove("notransition")
+        // overlay.classList.remove("notransition")
+
+        // Less logical, touch all elements, works more often for some reason (?)
         let elements = document.querySelectorAll("*")
         elements.forEach((e) => {e.classList.add("notransition")})
         openModal(document.getElementById("modal-tutorial"))
