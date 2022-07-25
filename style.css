@@ -163,6 +163,12 @@ html, body {
     user-select: none;
 }
 
+#pushable-label1 {
+    font-size: 14px;
+    position: relative;
+    top: -2px;
+}
+
 #pushable-label {
     font-size: 14px;
     position: relative;
@@ -172,13 +178,13 @@ html, body {
 #pushable-label::before {
     content: "";
     background: url("assets/check-circle.svg");
-    filter: grayscale(100%) brightness(0%) invert(100%) brightness(18.75%);
+    filter: brightness(0%) invert(100%) brightness(18.75%);
     background-position: center;
     background-size: contain;
     width: 37px;
     height: 37px;
     position: absolute;
-    left: 13.5px;
+    left: calc(13.5px - 64.390625px);
     top: 24.5px;
     transform: scale(0) rotateZ(180deg);
     transition: all 400ms ease-in-out;
@@ -196,7 +202,7 @@ html, body {
     width: 34px;
     height: 34px;
     position: absolute;
-    left: 15px;
+    left: calc(15px - 64.390625px);
     top: 26px;
     border-radius: 50%;
 }
@@ -227,12 +233,29 @@ html, body {
     right: 1rem;
     top: 1rem;
     display: grid;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
 #buttons > * {
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: transparent;
+    /* background-color: var(--button-color); */
+    border: none;
+    color: var(--foreground-color);
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+}
+
+#buttons > *:hover {
+    transform: scale(1.2);
+}
+
+.icon {
+    filter: invert() brightness(96%);
+    width: inherit;
+    height: inherit;
 }
 
 #algoText-algo {
@@ -262,6 +285,10 @@ html, body {
     transition: 400ms ease-in-out;
     opacity: 0;
     pointer-events: none;
+}
+
+.notransition {
+    transition: none !important;
 }
 
 .modal.active {
@@ -395,6 +422,10 @@ html, body {
 #modal-body-tutorial > * {
     display: none;
     text-align: center;
+}
+
+#tutorial-page1 {
+    display: contents;
 }
 
 #modal-body-tutorial > * > h1 {

@@ -6,6 +6,12 @@ Simple web-based demonstration of the Separating Axis Theorem and an alternative
 
 https://alexarne.github.io/Convex-Polygon-Collisions/
 
+[YouTube video showcasing most of the features](link)
+
+## Code Overview
+
+A general overview of the code structure and what each file does is found in the [scripts folder's README file](./scripts/).
+
 ## Instructions
 
 The following information can also be accessed by clicking on the "Help" button in the top-right corner:
@@ -22,15 +28,23 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * The user can select another polygon by clicking on it
 
+## Known Bugs
+
+* During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, the action will be reverted, and print it to the console.
+
 ## TODOs
 
-* Style the input section (bottom center)
-
-* Add functionality to the help-button (top-right) in the form of creating a modal (pop-up) with instructions
-
-* Add functionality to the settings-button (top-right) in the form of creating a modal (pop-up) with configurable settings (movement speed slider, algorithm selector) and a save button
-
 * Finalize README by linking to code section of algorithm
+
+    * Add code overview in the scripts/ folder
+
+    * Add video demonstration of the website
+
+* Add Reset Values button to settings (red color)
+
+* Make all elements (input section, top-right buttons, modal sizes, canvas?, font sizes) resize to different resolutions
+
+* Add images to this README and the tutorial modal
 
 ## Algorithm Implementations
 
@@ -62,15 +76,11 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * **Crammed Spaces**
 
-    Previously, if a polygon was pushed by a non-pushable polygon into two non-pushable polygons (i.e., trapping it), a stack overflow would occur and the polygon would be placed somewhat incorrectly. This happened since the pushing polygon created a space in which the pushed polygon was unable to fit. The key detail here is that the pushing polygon had to be non-pushable, which meant it would not be able to be pushed back by the pushed polygon, given the solution for chain collisions. The solution was then to treat the selected polygon as pushable, no matter its actual value, so that it is unable to push polygons into spaces where they cannot fit. A similar situation would also occur if a polygon is completely surrounded by non-pushable polygons and starts to rotate. None of the algorithms are able to rotate the other polygon as a collision resolution, so it will be impossible for the rotated polygon to fit, cusing a stack overflow. To combat this, any movement action which results in a cstack overflow will be reverted.
+    Previously, if a polygon was pushed by a non-pushable polygon into two non-pushable polygons (i.e., trapping it), a stack overflow would occur and the polygon would be placed somewhat incorrectly. This happened since the pushing polygon created a space in which the pushed polygon was unable to fit. The key detail here is that the pushing polygon had to be non-pushable, which meant it would not be able to be pushed back by the pushed polygon, given the solution for chain collisions. The solution was then to treat the selected polygon as pushable, no matter its actual value, so that it is unable to push polygons into spaces where they cannot fit. A similar situation would also occur if a polygon is completely surrounded by non-pushable polygons and starts to rotate. None of the algorithms are able to rotate the other polygon as a collision resolution, so it will be impossible for the rotated polygon to fit, cusing a stack overflow. To combat this, any movement action which results in a cstack overflow will be reverted. This solution has the potential of impacting the user experience negatively since the polygon will not be able to move which, given an extra complicated chain collision, may be inexplicable to the user. However, those situations have only been theorised of and have never occured during development, making them understandably rare and therefore, this solution is deemed appropriate.
 
 * **Multiple Collision Points**
 
     If there were multiple contact points in a collision, the "Diagonals" algorithm would not respect that and would instead introduce noise in the resolution, resulting in movement from side to side in a perfect edge-to-edge collision. To solve that, we now use the updated points after displacement within the algorithm instead of only using the points for the polygons at the time of starting the algorithm (therefore; respecting any displacements which occur within the algorithm, before finishing). Another issue was that the displacement vectors (resolutions) would add up and result in a displacement value that was too high, due to improver vector additions. By respecting the amount of vectors added, we can reduce the displacement value by a factor of that amount. 
-
-## Known Bugs
-
-* During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, resulting in incorrectly placed polygons, and print it to the console.
 
 ## Final Words
 

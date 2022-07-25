@@ -27,8 +27,9 @@
                 </div>
                 <div id="pushable-container">
                     <div id="pushable-div">
+                        <label id="pushable-label1" for="">Pushable</label>
                         <input id="pushable" type="checkbox" checked>
-                        <label id="pushable-label" for="pushable">Pushable</label>
+                        <label id="pushable-label" for="pushable"></label>
                     </div>
                 </div>
             </div>
@@ -45,11 +46,11 @@
     </div>
 
     <div id="buttons">
-        <button data-modal-target="#modal-tutorial" id="tutorial" onclick="resetPage()">
-            ?
+        <button data-modal-target="#modal-settings" id="settings" class="button" onclick="resetSettings()">
+            <img class="icon" id="settings-icon" src="assets/gear.svg"/>
         </button>
-        <button data-modal-target="#modal-settings" id="settings" onclick="resetSettings()">
-            S
+        <button data-modal-target="#modal-tutorial" id="tutorial" class="button" onclick="resetPage()">
+            <img class="icon" id="tutorial-icon" src="assets/tutorial.svg">
         </button>
     </div>
 
@@ -119,14 +120,14 @@
                 <h1>Configure Your Experience</h1>
                 <h2>Choose which algorithm should be used by opening the settings.</h2>
                 <h2>You may also change the movement speed and rotation speed of the polygons.</h2>
-                <h2>Keep in mind that unless you save the settings, they will be discarded.</h2>
+                <h2>Your settings are maintained between sessions by storing them in Local Storage. Keep in mind that unless you save the settings, they will be discarded.</h2>
                 <!-- image of mouse clicking on the settings button -->
             </div>
             <div id="tutorial-page5">
                 <h1>Additional Controls</h1>
                 <h2>Change whether or not the selected polygon should be pushable by pressing P on your keyboard.</h2>
                 <h2>Close a pop-up (like this one) by clicking outside it or by pressing ESC.</h2>
-                <h2>Save the settings by pressig ENTER.</h2>
+                <h2>Save the settings by pressing ENTER.</h2>
             </div>
             <!-- <div id="tutorial-page3">
                 <h1>The Algorithms Only Work on Convex Polygons</h1>

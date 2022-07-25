@@ -192,13 +192,13 @@ function samePoints(points1, points2) {
  */
 function resolve_collisions(poly) {
     if (checks++ > polys.length*10) {
-        console.log("STACK OVERFLOW");
+        console.log("STACK OVERFLOW; ACTION REVERTED");
         polys = copyPolys(prevPolys);     // Revert
         return;
     }
     for (let i = 0; i < polys.length; i++) {
         if (i == poly) continue;
-        if (collision(poly, i)) {
+        if (collision(poly, i)) { 
             // We know that if the other is not pushable, the first must've been moved
             resolve_collisions(polys[i].pushable ? i : poly);
         }
@@ -276,6 +276,7 @@ function openModal(modal) {
 }
 function closeModal(modal) {
     if (modal == null) return
+    localStorage.setItem("firstVisit", "false")
     modal.classList.remove("active")
     overlay.classList.remove("active")
 }
@@ -297,15 +298,37 @@ displayValue("select-moveSpeed", "moveSpeedValue")
 displayValue("select-rotSpeed", "rotSpeedValue")
 
 /**
+ * Updates the settings values to match those stored in localStorage or default.
+ * Values concerned are; Algorithm, Movement Speed, and Rotation Speed.
+ */
+function initSettings() {
+    let moveSpeed = parseInt(localStorage.getItem("moveSpeed"))
+    let rotSpeed = parseInt(localStorage.getItem("rotSpeed"))
+    let algorithm = parseInt(localStorage.getItem("algorithm"))
+    if (moveSpeed == null) moveSpeed = 200      // Pixels per second
+    if (rotSpeed == null) rotSpeed = 260        // Degrees per second
+    if (algorithm == null) algorithm = 0
+    moveSpeedDefault = moveSpeed
+    rotationSpeedDefault = rotSpeed
+    updateAlgo(algorithm)
+}
+
+/**
  * Update the algorithm and movement values with respect to user's input.
+ * Also updates the values in localStorage.
  */
 function saveSettings() {
     const modal = document.getElementById("modal-settings")
-    if (document.getElementById("select-sat").checked) updateAlgo(0)
-    if (document.getElementById("select-diag").checked) updateAlgo(1)
+    let algorithm = 0;
+    if (document.getElementById("select-sat").checked) algorithm = 0
+    if (document.getElementById("select-diag").checked) algorithm = 1
+    updateAlgo(algorithm)
     moveSpeedDefault = document.getElementById("select-moveSpeed").value
     rotationSpeedDefault = document.getElementById("select-rotSpeed").value
     closeModal(modal)
+    localStorage.setItem("moveSpeed", moveSpeedDefault)
+    localStorage.setItem("rotSpeed", rotationSpeedDefault)
+    localStorage.setItem("algorithm", algorithm)
 }
 
 /**
@@ -419,9 +442,7 @@ window.onload = function() {
     canv.addEventListener("click", mouseClick);
 
     // Set global variables
-    saveSettings();
-    // rotationSpeedDefault = 260;     // Degrees per second
-    // moveSpeedDefault = 200;         // Pixels per second
+    initSettings();
     loaded = false;
 
     rotation = 0;
@@ -435,7 +456,6 @@ window.onload = function() {
     backward_alt = false;
     polys = [];
     spawnHeight = 130
-    updateAlgo(0);
 
     updateSize();
 
@@ -443,9 +463,18 @@ window.onload = function() {
     selected = 0;
 
     draw();
-    // setTimeout(() => {
-    //     openModal(document.getElementById("modal-tutorial"))
-    // }, 500);
+
+    // Show tutorial on first visit, with no transition
+    if (localStorage.getItem("firstVisit") != "false") {
+        let tutorialModal = document.getElementById("modal-tutorial");
+        tutorialModal.classList.add("notransition")
+        overlay.classList.add("notransition")
+        openModal(tutorialModal)
+        tutorialModal.offsetHeight
+        overlay.offsetHeight
+        tutorialModal.classList.remove("notransition")
+        overlay.classList.remove("notransition")
+    }
 }
 
 // Global variables
