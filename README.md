@@ -38,6 +38,10 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * Style settings modal
 
+* Add joystick for mobile control
+
+* style the github link + hover?
+
 ## Code Overview
 
 A general overview of the code structure and what each file does is found in the [scripts folder's README file](./scripts/).
