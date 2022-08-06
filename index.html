@@ -97,48 +97,52 @@
             <div class="modal-title">Tutorial</div>
             <button data-close-button class="modal-closeButton">&times;</button>
         </div>
-        <div id="modal-body-tutorial">
-            <div id="tutorial-page1">
-                <h1>Welcome to Convex Polygon Collisions</h1>
-                <h2>This demonstration seeks to showcase the behaviours of two algorithms; Separating Axis Theorem and Diagonals.</h2>
-                <h2>If you want to skip the tutorial, click the "Skip" button below. Otherwise, click on the buttons in the bottom right or use the arrow keys on your keyboard.</h2>
-                <!-- image of two polygons colliding and creating sparks, same but cropped from github repo -->
-            </div>
-            <div id="tutorial-page2">
-                <h1>Controlling the Polygons</h1>
-                <h2>The purpose is to create multiple polygons in order to drive them into each other and observe how the collisions are handled.</h2>
-                <h2>You can move the selected polygon by pressing W, A, S, or D on your keyboard.</h2>
-                <!-- image of wasd keys -->
-            </div>
-            <div id="tutorial-page3">
-                <h1>Creating Polygons</h1>
-                <h2>Create a new polygon by inputting its amount of sides and choosing if it should be pushable before clicking "Create Polygon".</h2>
-                <h2>The values on the input section are used when creating new polygons, not to modify existing polygons.</h2>
-                <h2>Click on a polygon to select it.</h2>
-                <h2>If existing polygons would collide with the new polygon, those polygons will blink red and no new polygon is created.</h2>
-                <!-- image of polygon being red and a dashed outline of the polygon that was attempted to be spawned -->
-            </div>
-            <div id="tutorial-page4">
-                <h1>Configure Your Experience</h1>
-                <h2>Choose which algorithm should be used by opening the settings.</h2>
-                <h2>You may also change the movement speed and rotation speed of the polygons.</h2>
-                <h2>Your settings are maintained between sessions by storing them in Local Storage. Keep in mind that unless you save the settings, they will be discarded.</h2>
-                <!-- image of mouse clicking on the settings button -->
-            </div>
-            <div id="tutorial-page5">
-                <h1>Additional Controls</h1>
-                <h2>Change whether or not the selected polygon should be pushable by pressing P on your keyboard.</h2>
-                <h2>Close a pop-up (like this one) by clicking outside it or by pressing ESC.</h2>
-                <h2>Save the settings by pressing ENTER.</h2>
-            </div>
-            <!-- <div id="tutorial-page3">
-                <h1>The Algorithms Only Work on Convex Polygons</h1>
-                <h2>Convex polygons are polygons where all internal angles are less than or equal to 180&deg;. This may be seen as a limitation, but since every concave polygon is made up of convex polygons, the algorithms can still be applied to concave polygons.</h2>
-            </div> -->
-            <div id="tutorial-page6">
-                <h1>That's It!</h1>
-                <h2>I hope you will enjoy this project as much as I did making it!</h2>
-                <h2>For the source code and more information regarding the algorithms and this project, visit <a href="https://github.com/alexarne/Convex-Polygon-Collisions">my GitHub</a>.</h2>
+        <div id="modal-body-tutorial-container">
+            <div id="modal-body-tutorial">
+                <div id="tutorial-page1">
+                    <h1>Welcome to Convex Polygon Collisions</h1>
+                    <h2>This demonstration seeks to showcase the behaviours of two algorithms; Separating Axis Theorem and Diagonals.</h2>
+                    <h2>The user experience is optimized for your computer, but mobile support also exists.</h2>
+                    <h2>If you want to skip the tutorial, click the "Skip" button below. Otherwise, click on the buttons in the bottom right or use the arrow keys on your keyboard.</h2>
+                    <!-- image of two polygons colliding and creating sparks, same but cropped from github repo -->
+                    <img src="assets/tutorial1.png" class="tutorial-image">
+                </div>
+                <div id="tutorial-page2">
+                    <h1>Controlling the Polygons</h1>
+                    <h2>The purpose is to create multiple polygons in order to drive them into each other and observe how the collisions are handled.</h2>
+                    <h2>You can move the selected polygon by pressing W, A, S, or D on your keyboard.</h2>
+                    <!-- image of wasd keys -->
+                </div>
+                <div id="tutorial-page3">
+                    <h1>Creating Polygons</h1>
+                    <h2>Create a new polygon by inputting its amount of sides and choosing if it should be pushable before clicking "Create Polygon".</h2>
+                    <h2>The values on the input section are used when creating new polygons, not to modify existing polygons.</h2>
+                    <h2>Click on a polygon to select it.</h2>
+                    <h2>If existing polygons would collide with the new polygon, those polygons will blink red and no new polygon is created.</h2>
+                    <!-- image of polygon being red and a dashed outline of the polygon that was attempted to be spawned -->
+                </div>
+                <div id="tutorial-page4">
+                    <h1>Configure Your Experience</h1>
+                    <h2>Choose which algorithm should be used by opening the settings.</h2>
+                    <h2>You may also change the movement speed and rotation speed of the polygons.</h2>
+                    <h2>Your settings are maintained between sessions by storing them in Local Storage. Keep in mind that unless you save the settings, they will be discarded.</h2>
+                    <!-- image of mouse clicking on the settings button -->
+                </div>
+                <div id="tutorial-page5">
+                    <h1>Additional Controls</h1>
+                    <h2>Change whether or not the selected polygon should be pushable by pressing P on your keyboard.</h2>
+                    <h2>Close a pop-up (like this one) by clicking outside it or by pressing ESC.</h2>
+                    <h2>Save the settings by pressing ENTER.</h2>
+                </div>
+                <!-- <div id="tutorial-page3">
+                    <h1>The Algorithms Only Work on Convex Polygons</h1>
+                    <h2>Convex polygons are polygons where all internal angles are less than or equal to 180&deg;. This may be seen as a limitation, but since every concave polygon is made up of convex polygons, the algorithms can still be applied to concave polygons.</h2>
+                </div> -->
+                <div id="tutorial-page6">
+                    <h1>That's It!</h1>
+                    <h2>I hope you will enjoy this project as much as I did making it!</h2>
+                    <h2>For the source code and more information regarding the algorithms and this project, visit <a href="https://github.com/alexarne/Convex-Polygon-Collisions">my GitHub</a>.</h2>
+                </div>
             </div>
         </div>
         <div id="modal-tutorial-footer">

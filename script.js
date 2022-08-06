@@ -414,6 +414,10 @@ function resetPage() {
     displayPage();
 }
 
+// Disable dragging images
+document.querySelectorAll(".tutorial-image").forEach(element => {
+    element.setAttribute("draggable", false);
+});
 
 
 if (!window.requestAnimationFrame) {

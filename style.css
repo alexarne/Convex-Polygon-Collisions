@@ -357,17 +357,25 @@ html, body {
     height: auto;
 }
 
-#modal-body-tutorial {
-    height: 300px;
+#modal-body-tutorial-container {
+    height: 350px;
 }
 
-#modal-body-settings, #modal-body-tutorial {
+#modal-body-settings, #modal-body-tutorial-container {
     padding: 0px 15px;
     max-height: calc(70vh - 100px);
     overflow-y: auto;
+    overflow-x: hidden;
     /* Firefox */
     scrollbar-width: 10px;
     scrollbar-color: var(--button-color) var(--foreground-color);
+}
+
+#modal-body-tutorial {
+}
+
+.tutorial-image {
+    max-width: 100%;
 }
 
 ::-webkit-scrollbar {
