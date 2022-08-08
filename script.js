@@ -473,22 +473,27 @@ window.onload = function() {
 
     draw();
 
+    // Workaround for flashing modals on page load
+    document.querySelectorAll(".modal-hide").forEach(e => {
+        e.classList.remove("modal-hide");
+    }); 
+
     // Show tutorial on first visit, disable transitions on all elements
     if (localStorage.getItem("firstVisit") != "false") {
-        // // More logical, only touch conerned elements, doesnt always work (?)
-        // document.getElementById("modal-tutorial").classList.add("notransition")
-        // overlay.classList.add("notransition")
-        // openModal(document.getElementById("modal-tutorial"))
-        // document.getElementById("modal-tutorial").offsetHeight
-        // overlay.offsetHeight
-        // document.getElementById("modal-tutorial").classList.remove("notransition")
-        // overlay.classList.remove("notransition")
-
-        // Less logical, touch all elements, works more often for some reason (?)
-        let elements = document.querySelectorAll("*")
-        elements.forEach((e) => {e.classList.add("notransition")})
+        // More logical, only touch conerned elements, doesnt always work (?)
+        document.getElementById("modal-tutorial").classList.add("notransition")
+        overlay.classList.add("notransition")
         openModal(document.getElementById("modal-tutorial"))
-        elements.forEach((e) => {e.offsetHeight; e.classList.remove("notransition");})
+        document.getElementById("modal-tutorial").offsetHeight
+        overlay.offsetHeight
+        document.getElementById("modal-tutorial").classList.remove("notransition")
+        overlay.classList.remove("notransition")
+
+        // // Less logical, touch all elements, works more often for some reason (?)
+        // let elements = document.querySelectorAll("*")
+        // elements.forEach((e) => {e.classList.add("notransition")})
+        // openModal(document.getElementById("modal-tutorial"))
+        // elements.forEach((e) => {e.offsetHeight; e.classList.remove("notransition");})
     }
 }
 

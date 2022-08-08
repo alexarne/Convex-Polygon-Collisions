@@ -319,6 +319,10 @@ html, body {
     pointer-events: none;
 }
 
+.modal-hide {
+    display: none !important;
+}
+
 .notransition {
     transition: none !important;
 }
