@@ -478,9 +478,8 @@ window.onload = function() {
         e.classList.remove("modal-hide");
     }); 
 
-    // Show tutorial on first visit, disable transitions on all elements
+    // Show tutorial on first visit, disable transitions for relevant elements
     if (localStorage.getItem("firstVisit") != "false") {
-        // More logical, only touch conerned elements, doesnt always work (?)
         document.getElementById("modal-tutorial").classList.add("notransition")
         overlay.classList.add("notransition")
         openModal(document.getElementById("modal-tutorial"))
@@ -488,12 +487,6 @@ window.onload = function() {
         overlay.offsetHeight
         document.getElementById("modal-tutorial").classList.remove("notransition")
         overlay.classList.remove("notransition")
-
-        // // Less logical, touch all elements, works more often for some reason (?)
-        // let elements = document.querySelectorAll("*")
-        // elements.forEach((e) => {e.classList.add("notransition")})
-        // openModal(document.getElementById("modal-tutorial"))
-        // elements.forEach((e) => {e.offsetHeight; e.classList.remove("notransition");})
     }
 }
 
@@ -699,6 +692,9 @@ function addPolygon() {
         let pushable = document.getElementById("pushable").checked;
         polys[newPlace] = new Polygon(sides, pushable);
         selected = newPlace;
+        polys.forEach(e => {
+            e.blinkStop();
+        })
     } else {
         polys.pop();
     }
@@ -845,6 +841,7 @@ class Polygon {
      */
     draw(selected) {
         let color = this.pushable ? "#A0A0A0" : "#505050";
+        // If blinking, set another color
         if (this.blinkTimer > 0) {
             this.blinkTimer -= elapsedTime;
             if (this.blinkTimer % this.cycle <= this.blinkOn) {
@@ -875,6 +872,13 @@ class Polygon {
     blink() {
         // blinkTimer will become NaN if elapsedTime is NaN, and the blinking will be ignored
         this.blinkTimer = this.blinks*this.cycle - this.blinkOff;
+    }
+
+    /**
+     * Reset the blinkTimer.
+     */
+    blinkStop() {
+        this.blinkTimer = 0;
     }
 
     /**
