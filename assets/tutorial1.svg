@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 370 100" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <path d="M 165.167 36.023 L 194.168 57.093 L 183.09 91.185 L 147.244 91.185 L 136.166 57.093 Z" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); fill: rgb(160, 160, 160);" transform="matrix(0.939934, 0.341357, -0.341357, 0.939934, 32.784649, -53.595581)" bx:shape="n-gon 165.167 66.516 30.493 30.493 5 0 1@503dddef"/>
+  <path d="M 71.083 34.707 L 94.583 58.207 L 71.083 81.707 L 47.583 58.207 Z" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); fill: rgb(160, 160, 160);" transform="matrix(0.99863, -0.052336, 0.052336, 0.99863, -8.985885, -4.829329)" bx:shape="n-gon 71.083 58.207 23.5 23.5 4 0 1@40762dae"/>
+  <path d="M 345.184 40.572 L 364.498 74.445 L 325.871 74.445 L 345.184 40.572 Z" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); fill: rgb(160, 160, 160);" transform="matrix(0.945857, 0.324584, -0.365656, 0.931762, 3.767312, -120.319359)" bx:shape="triangle 325.871 40.572 38.627 33.873 0.5 0 1@41f1ba25"/>
+  <path d="M 484.145 53.474 L 511.233 98.119 L 457.056 98.119 L 484.145 53.474 Z" style="stroke-opacity: 0; stroke: rgb(0, 0, 0); fill: rgb(160, 160, 160);" transform="matrix(0.998628, -0.052361, 0.127966, 0.994664, -285.537689, -25.416895)" bx:shape="triangle 457.056 53.474 54.177 44.645 0.5 0 1@9e473f24"/>
+</svg>
