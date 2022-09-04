@@ -596,7 +596,12 @@ function updateSize() {
     ctx.canvas.height = h;
     spawnX = w/2;
     spawnY = h*0.8-240 + spawnHeight/2;
-    document.getElementById("inputSection").style.transform = "translate(-50%, 0) scale(" + Math.min(1, w/280) + ")";
+    document.getElementById("inputSection").style.transform = "translate(-50%, 0) scale(" + 
+        Math.min(                   // Select the minimum of
+            w/280,     // Scale to fit width
+            (110 / 969 * h) / 110
+        )
+    + ")";
 }
 
 /**
