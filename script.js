@@ -730,7 +730,9 @@ function keyDown(evt) {
             if (document.getElementById("modal-settings").classList.contains("active")) saveSettings();
             break;
         case String.fromCharCode(27):   // ESC
-            document.querySelectorAll(".modal.active").forEach((e) => {closeModal(e)})
+            let wasActive = false;
+            document.querySelectorAll(".modal.active").forEach((e) => {wasActive = true; closeModal(e)})
+            if (!wasActive) {resetSettings(); openModal(document.getElementById("modal-settings"));}
             break;
         case String.fromCharCode(37):   // Left arrow
             prevPage();
