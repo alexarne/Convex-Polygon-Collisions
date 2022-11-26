@@ -6,7 +6,7 @@ Simple web-based demonstration of the Separating Axis Theorem and an alternative
 
 https://alexarne.github.io/Convex-Polygon-Collisions/
 
-[YouTube video showcasing most of the features](link)
+[YouTube video showcasing most of the features (WIP)](link)
 
 ## Instructions
 
@@ -34,7 +34,7 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * Make all elements (input section, top-right buttons, modal sizes, canvas?, font sizes) resize to different resolutions
 
-* Add images to this README and the tutorial modal
+* Refactor code into smaller chunks for increased readability
 
 * Style settings modal
 
@@ -42,15 +42,15 @@ The following information can also be accessed by clicking on the "Help" button 
 
 * style the github link + hover?
 
-## Code Overview
+## Code Overview (WIP)
 
 A general overview of the code structure and what each file does is found in the [scripts folder's README file](./scripts/).
 
 ## Algorithm Implementations
 
-[The implementation of Separating Axis Theorem](link)
+[The implementation of Separating Axis Theorem](./script.js#L7-L93)
 
-[The implementation of "Diagonals"](link)
+[The implementation of "Diagonals"](./script.js#L95-L185)
 
 ## Intuitive Understanding
 
