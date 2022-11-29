@@ -86,6 +86,8 @@ A general overview of the code structure and what each file does is found in the
 
 * During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, the action will be reverted, and print it to the console.
 
+* Different screen resolutions may cause issues with certain elements' scalings. Recommended solution is to zoom in or out until it looks alright (it was developed on a 1920x1080 screen) while I work on a fix.
+
 ## Final Words (WIP)
 
 To come
