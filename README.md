@@ -86,5 +86,6 @@ A general overview of the code structure and what each file does is found in the
 
 * During particularly complicated simulations involving chain collisions, stack overflows might occur. In such cases, the collision algorithm will halt, the action will be reverted, and print it to the console.
 
-## Final Words
+## Final Words (WIP)
 
+To come
